@@ -1,50 +1,92 @@
-@import url("photographer.css");
+@import url('photographer.css');
 
-body {
-    font-family: "DM Sans", sans-serif;
-    margin: 0;
+:root {
+  --primary-color-dark: #901c1c;
+  --primary-color-light: #db8876;
+
+  --secondary-color-dark: #d3573c;
+  --secondary-neutral-dark: #525252;
+  --secondary-neutral-medium: #757575;
+  --secondary-neutral-light: #fafafa;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  margin: 0;
+}
 
 header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 90px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 90px;
 }
 
 h1 {
-    color: #901C1C;
-    margin-right: 100px;
+  color: var(--primary-color-dark);
+  margin-right: 100px;
 }
 
 .logo {
-    height: 50px;
-    margin-left: 100px;
+  height: 50px;
+  margin-left: 100px;
 }
 
 .photographer_section {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 70px;
-    margin-top: 100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 70px;
+  margin: 100px 0;
 }
 
 .photographer_section article {
-    justify-self: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.photographer_section article h2 {
-    color: #D3573C;
-    font-size: 36px;
+  justify-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  font-weight: 400;
 }
 
 .photographer_section article img {
-    height: 200px;
-    width: 200px;
+  height: 200px;
+  width: 200px;
+  border-radius: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: #c4c4c4;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.photographer_section article h2 {
+  color: var(--secondary-color-dark);
+  font-size: 36px;
+}
+
+.photographer_section article h3 {
+  color: var(--primary-color-dark);
+  font-size: 13px;
+}
+
+.photographer_section article p {
+  font-size: 10px;
+  line-height: 13px;
+  margin: 3px 0;
+}
+
+.photographer_section article span {
+  font-size: 9px;
+  color: var(--secondary-neutral-medium);
 }
