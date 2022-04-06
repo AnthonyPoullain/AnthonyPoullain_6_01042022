@@ -12,6 +12,8 @@ async function displayData(photographers) {
   const photographersSection = document.querySelector('.photographer_section');
 
   photographers.forEach((photographer) => {
+    console.log(photographer);
+    // eslint-disable-next-line no-undef
     const photographerModel = photographerFactory(photographer);
     const userCardDOM = photographerModel.getUserCardDOM();
     photographersSection.appendChild(userCardDOM);
@@ -23,6 +25,7 @@ async function init() {
   const { photographers } = await getPhotographers();
   displayData(photographers);
 
+  // Saving the photographers array to sessionStorage
   window.sessionStorage.setItem('photographers', JSON.stringify(photographers));
 }
 

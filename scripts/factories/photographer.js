@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 function photographerFactory(data) {
   const { id, name, portrait, city, tagline, price } = data;
 
@@ -36,6 +37,34 @@ function photographerFactory(data) {
     return photographerProfile;
   }
 
+  function getUserHeaderDOM() {
+    const photographerDescription = document.createElement('div');
+    const photographerImgContainer = document.createElement('div');
+    const photographerImg = document.createElement('img');
+    photographerImg.setAttribute('src', picture);
+    const photographerName = document.createElement('h2');
+    const photographerCity = document.createElement('h3');
+    const photographerTagline = document.createElement('p');
+    // const photographerPrice = document.createElement('span');
+
+    // assigning the data to the DOM Elements
+    photographerName.textContent = name;
+    photographerCity.textContent = city;
+    photographerTagline.textContent = tagline;
+    // photographerPrice.textContent = `${price}€/jour`;
+
+    // making the displayed data accessible
+    photographerImg.setAttribute('alt', `Photo de profil de ${name}`);
+
+    photographerDescription.appendChild(photographerName);
+    photographerDescription.appendChild(photographerCity);
+    photographerDescription.appendChild(photographerTagline);
+
+    photographerImgContainer.appendChild(photographerImg);
+    // photographerHeader.appendChild(photographerPrice);
+    return { photographerDescription, photographerImgContainer };
+  }
+
   // return { name, picture, getUserCardDOM };
-  return { getUserCardDOM };
+  return { getUserCardDOM, getUserHeaderDOM };
 }
