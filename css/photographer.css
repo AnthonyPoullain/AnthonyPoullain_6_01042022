@@ -1,3 +1,9 @@
+img,
+video {
+  object-fit: cover;
+  object-position: center;
+}
+
 #contact_modal {
   display: none;
 }
@@ -12,12 +18,36 @@
   justify-content: space-between;
 }
 
-.photograph-header img {
+.photograph-header__name {
+  color: var(--secondary-color-dark);
+  font-size: 64px;
+  font-weight: 400;
+  line-height: 83px;
+}
+
+.photograph-header__city {
+  color: var(--primary-color-dark);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 31px;
+  margin-top: 10px;
+}
+
+.photograph-header__tagline {
+  color: var(--secondary-neutral-dark);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 23px;
+  margin-top: 20px;
+}
+
+.photograph-header__img {
   width: 200px;
   height: 200px;
   object-fit: cover;
   object-position: center;
   border-radius: 100%;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .contact_button {
@@ -85,4 +115,53 @@ form input {
   height: 68px;
   border: none;
   border-radius: 5px;
+}
+
+/* Media section */
+.media-section {
+  display: flex;
+  gap: 30px 95px;
+  margin: 60px 0;
+  width: 100vw;
+  padding: 0 100px;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+
+.media-card {
+  width: 350px;
+}
+
+.media-card__img {
+  width: 350px;
+  height: 300px;
+  border-radius: 5px;
+}
+
+.media-card__description {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  color: var(--primary-color-dark);
+}
+
+.media-card__title {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 31px;
+  width: 275px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.media-card__likes {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 31px;
+}
+
+.media-card__likes i {
+  margin-left: 5px;
 }
