@@ -56,7 +56,6 @@ function photographerFactory(data) {
     const photographerName = document.createElement('h2');
     const photographerCity = document.createElement('h3');
     const photographerTagline = document.createElement('p');
-    // const photographerPrice = document.createElement('span');
 
     // Setting classes
     photographerDescription.classList.add('photograph-header__description');
@@ -69,7 +68,6 @@ function photographerFactory(data) {
     photographerName.textContent = name;
     photographerCity.textContent = city;
     photographerTagline.textContent = tagline;
-    // photographerPrice.textContent = `${price}€/jour`;
 
     // Setting accessibility attributes
     photographerImg.setAttribute('alt', `Photo de profil de ${name}`);
@@ -85,8 +83,35 @@ function photographerFactory(data) {
     return { photographerDescription, photographerImgContainer };
   }
 
+  function getUserInfoCardDOM(totalLikes) {
+    // Creating HTML elements
+    const infoCard = document.createElement('div');
+    const photographerLikes = document.createElement('span');
+    const photographerPrice = document.createElement('span');
+    const heart = document.createElement('i');
+
+    // Setting classes
+    infoCard.classList.add('info-card');
+    photographerLikes.classList.add('info-card__likes');
+    photographerPrice.classList.add('info-card__price');
+    heart.classList.add('fa-solid');
+    heart.classList.add('fa-heart');
+
+    // Setting text content
+    photographerLikes.textContent = totalLikes;
+    photographerPrice.textContent = `${price}€/jour`;
+
+    // Appending html children elements to the main element
+    photographerLikes.appendChild(heart);
+    infoCard.appendChild(photographerLikes);
+    infoCard.appendChild(photographerPrice);
+
+    // Returning the main elements
+    return infoCard;
+  }
+
   // return { name, picture, getUserCardDOM };
-  return { name, getUserCardDOM, getUserHeaderDOM };
+  return { name, getUserCardDOM, getUserHeaderDOM, getUserInfoCardDOM };
 }
 
 function mediaFactory(data, name) {
@@ -106,8 +131,6 @@ function mediaFactory(data, name) {
     mediaThumbnail.setAttribute('alt', `Photo titled ${title}`);
     const mediaLikes = document.createElement('span');
     const mediaHeart = document.createElement('i');
-    mediaHeart.classList.add('fa-solid');
-    mediaHeart.classList.add('fa-heart');
 
     // Setting classes
     media.classList.add('media-card');
@@ -116,6 +139,8 @@ function mediaFactory(data, name) {
     mediaDescription.classList.add('media-card__description');
     mediaTitle.classList.add('media-card__title');
     mediaLikes.classList.add('media-card__likes');
+    mediaHeart.classList.add('fa-solid');
+    mediaHeart.classList.add('fa-heart');
 
     // Setting text content
     mediaTitle.textContent = title;
