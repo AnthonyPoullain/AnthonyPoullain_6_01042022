@@ -12,7 +12,10 @@ async function displayName() {
   const title = document.querySelector('.modal h2');
   // eslint-disable-next-line no-undef
   const photographer = await getPhotographer(id);
-  title.insertAdjacentHTML('beforeend', `</br>${photographer.name}`);
+  title.insertAdjacentHTML(
+    'beforeend',
+    `</br>${photographer.photographer.name}`
+  );
 }
 
 displayName();
