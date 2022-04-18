@@ -184,8 +184,8 @@ textarea {
   margin-left: 5px;
 }
 
-/* info-card section */
-.info-card {
+/* info-bar section */
+.info-bar {
   position: fixed;
   width: 376px;
   bottom: 0;
@@ -199,10 +199,10 @@ textarea {
   font-size: 24px;
 }
 
-.info-card__likes {
+.info-bar__likes {
   margin-right: auto;
 }
 
-.info-card__likes i {
+.info-bar__likes i {
   margin-left: 5px;
 }

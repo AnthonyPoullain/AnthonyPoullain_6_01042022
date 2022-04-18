@@ -11,7 +11,7 @@ async function getPhotographers() {
 
 async function displayData(photographers) {
   const photographersSection = document.querySelector('.photographer_section');
-  photographers.photographers.forEach((photographer) => {
+  photographers.forEach((photographer) => {
     // eslint-disable-next-line no-undef
     const photographerModel = photographerFactory(photographer);
     const userCardDOM = photographerModel.getUserCardDOM();
@@ -22,7 +22,7 @@ async function displayData(photographers) {
 async function init() {
   // Récupère les datas des photographes
   const photographers = await getPhotographers();
-  displayData(photographers);
+  displayData(photographers.photographers);
 }
 
 init();
