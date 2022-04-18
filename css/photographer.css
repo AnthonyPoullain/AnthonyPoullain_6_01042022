@@ -148,12 +148,39 @@ textarea {
 
 .media-card {
   width: 350px;
+  position: relative;
+}
+
+.media-card__link i {
+  position: absolute;
+  font-size: 5rem;
+  color: #fff;
+  opacity: 50%;
+  top: 42.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.media-card:hover .media-card__link i {
+  opacity: 75%;
+  pointer-events: none;
 }
 
 .media-card__img {
   width: 350px;
   height: 300px;
   border-radius: 5px;
+  overflow: hidden;
+}
+.media-card__img > * {
+  width: 350px;
+  height: 300px;
+}
+
+.media-card__img:hover > * {
+  transform: scale(1.1);
+  transition: 0.5s ease-out;
 }
 
 .media-card__description {

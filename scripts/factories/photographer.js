@@ -144,20 +144,24 @@ function mediaFactory(data) {
       const mediaCard = document.createElement('article');
       const mediaLink = document.createElement('a');
       mediaLink.setAttribute('href', '#');
-      const mediaThumbnail = document.createElement(
-        `${image ? 'img' : 'video'}`
-      );
-      mediaThumbnail.setAttribute('src', mediaPath);
-      mediaThumbnail.setAttribute('alt', `Photo titled ${title}`);
+      const mediaThumbnail = document.createElement('div');
+      const media = document.createElement(`${item.image ? 'img' : 'video'}`);
+      media.setAttribute('src', mediaPath);
+      media.setAttribute('alt', `Photo titled ${title}`);
       const mediaDescription = document.createElement('div');
       const mediaTitle = document.createElement('h2');
-      mediaThumbnail.setAttribute('alt', `Photo titled ${title}`);
       const mediaLikes = document.createElement('span');
       const mediaHeart = document.createElement('i');
 
       // Setting classes
       mediaCard.classList.add('media-card');
       mediaLink.classList.add('media-card__link');
+      if (item.video) {
+        const playIcon = document.createElement('i');
+        playIcon.classList.add('fa-solid');
+        playIcon.classList.add('fa-circle-play');
+        mediaLink.appendChild(playIcon);
+      }
       mediaThumbnail.classList.add('media-card__img');
       mediaDescription.classList.add('media-card__description');
       mediaTitle.classList.add('media-card__title');
@@ -174,6 +178,7 @@ function mediaFactory(data) {
       mediaCard.appendChild(mediaLink);
       mediaCard.appendChild(mediaDescription);
       mediaLink.appendChild(mediaThumbnail);
+      mediaThumbnail.appendChild(media);
       mediaDescription.appendChild(mediaTitle);
       mediaDescription.appendChild(mediaLikes);
       mediaLikes.appendChild(mediaHeart);
