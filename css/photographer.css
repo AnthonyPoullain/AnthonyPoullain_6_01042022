@@ -65,6 +65,7 @@ video {
   top: 5%;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 20;
 }
 
 .modal {
@@ -148,21 +149,23 @@ textarea {
 
 .media-card {
   width: 350px;
+}
+.media-card__img {
   position: relative;
 }
 
-.media-card__link i {
+.media-card__img i {
   position: absolute;
   font-size: 5rem;
   color: #fff;
   opacity: 50%;
-  top: 42.5%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
+  z-index: 1;
 }
 
-.media-card:hover .media-card__link i {
+.media-card:hover .media-card__img i {
   opacity: 75%;
   pointer-events: none;
 }
@@ -172,15 +175,18 @@ textarea {
   height: 300px;
   border-radius: 5px;
   overflow: hidden;
+  cursor: pointer;
 }
-.media-card__img > * {
+.media-card__img > img,
+.media-card__img > video {
   width: 350px;
   height: 300px;
+  transition: 0.3s ease-in-out;
 }
 
-.media-card__img:hover > * {
-  transform: scale(1.1);
-  transition: 0.5s ease-out;
+.media-card__img:hover > img,
+.media-card__img:hover > video {
+  transform: scale(1.05);
 }
 
 .media-card__description {

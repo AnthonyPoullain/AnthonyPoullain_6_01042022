@@ -142,8 +142,6 @@ function mediaFactory(data) {
 
       // Creating HTML elements
       const mediaCard = document.createElement('article');
-      const mediaLink = document.createElement('a');
-      mediaLink.setAttribute('href', '#');
       const mediaThumbnail = document.createElement('div');
       const media = document.createElement(`${item.image ? 'img' : 'video'}`);
       media.setAttribute('src', mediaPath);
@@ -155,12 +153,11 @@ function mediaFactory(data) {
 
       // Setting classes
       mediaCard.classList.add('media-card');
-      mediaLink.classList.add('media-card__link');
       if (item.video) {
         const playIcon = document.createElement('i');
         playIcon.classList.add('fa-solid');
         playIcon.classList.add('fa-circle-play');
-        mediaLink.appendChild(playIcon);
+        mediaThumbnail.insertAdjacentElement('afterbegin', playIcon);
       }
       mediaThumbnail.classList.add('media-card__img');
       mediaDescription.classList.add('media-card__description');
@@ -175,9 +172,8 @@ function mediaFactory(data) {
 
       // Appending html children elements to the main card element
       mediaSection.appendChild(mediaCard);
-      mediaCard.appendChild(mediaLink);
       mediaCard.appendChild(mediaDescription);
-      mediaLink.appendChild(mediaThumbnail);
+      mediaCard.insertAdjacentElement('afterbegin', mediaThumbnail);
       mediaThumbnail.appendChild(media);
       mediaDescription.appendChild(mediaTitle);
       mediaDescription.appendChild(mediaLikes);

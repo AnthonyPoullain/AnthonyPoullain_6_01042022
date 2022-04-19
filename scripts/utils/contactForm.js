@@ -18,4 +18,23 @@ async function displayName() {
   );
 }
 
-displayName();
+// Get user input from form
+const contactBtn = document.querySelector('#contact-form .contact_button');
+const inputEls = Array.from(
+  document.querySelectorAll('#contact-form input, #contact-form textarea')
+);
+const formData = {};
+contactBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  inputEls.forEach((el) => {
+    formData[el.name] = el.value;
+  });
+  console.log(formData);
+  closeModal();
+});
+
+function init() {
+  displayName();
+}
+
+init();
