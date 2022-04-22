@@ -16,7 +16,13 @@
   </head>
   <body>
     <header>
-      <img src="assets/images/logo.png" class="logo" />
+      <a href="/">
+        <img
+          src="assets/images/logo.png"
+          class="logo"
+          alt="Fisheye Home page"
+        />
+      </a>
     </header>
     <main id="main">
       <div class="photograph-header">
@@ -25,29 +31,61 @@
         </button>
       </div>
     </main>
-    <div id="contact_modal">
-      <div class="modal">
-        <header>
-          <h2>Contactez-moi</h2>
-          <img src="assets/icons/close.svg" onclick="closeModal()" />
-        </header>
-        <form id="contact-form">
-          <div>
-            <label for="firstname">Prénom</label>
-            <input id="firstname" name="firstname" />
-            <label for="surname">Nom</label>
-            <input id="surname" name="surname" />
-            <label for="email" type="email">Email</label>
-            <input id="email" name="email" />
-            <label>Votre message</label>
-            <textarea id="message" name="message" rows="3" cols=""></textarea>
-          </div>
-          <button class="contact_button">Envoyer</button>
-        </form>
+    <div id="contact_modal" class="modal" aria-labelledby="2">
+      <header>
+        <h2 id="2">Contactez-moi</h2>
+        <img
+          src="assets/icons/close.svg"
+          aria-label="Close Contact form"
+          onclick="closeModal()"
+        />
+      </header>
+      <form id="contact-form">
+        <div>
+          <label for="firstname">Prénom</label>
+          <input id="firstname" name="firstname" />
+          <label for="surname">Nom</label>
+          <input id="surname" name="surname" />
+          <label for="email" type="email">Email</label>
+          <input id="email" name="email" />
+          <label for="message">Votre message</label>
+          <textarea id="message" name="message" rows="3" cols=""></textarea>
+        </div>
+        <button class="contact_button" aria-label="Send">Envoyer</button>
+      </form>
+    </div>
+    <div class="lightbox">
+      <div class="lightbox__left-controls">
+        <img
+          id="right-arrow"
+          class="lightbox__arrow"
+          src="assets/icons/left-arrow.svg"
+          alt="Previous image"
+          tabindex="O"
+          onclick="previousMedia()"
+        />
+      </div>
+      <div class="lightbox__img"></div>
+      <div class="lightbox__right-controls">
+        <img
+          class="lightbox__close"
+          src="assets/icons/close.svg"
+          aria-label="Close lightbox"
+          onclick="closeLightbox()"
+        />
+        <img
+          id="left-arrow"
+          class="lightbox__arrow"
+          src="assets/icons/right-arrow.svg"
+          alt="Next image"
+          tabindex="O"
+          onclick="nextMedia()"
+        />
       </div>
     </div>
     <script src="/scripts/factories/photographer.js"></script>
     <script src="/scripts/pages/photographer.js"></script>
     <script src="/scripts/utils/contactForm.js"></script>
+    <script src="/scripts/utils/lightbox.js"></script>
   </body>
 </html>

@@ -239,3 +239,53 @@ textarea {
 .info-bar__likes i {
   margin-left: 5px;
 }
+
+/* lightbox */
+.lightbox {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.lightbox__arrow {
+  margin: 35px;
+  cursor: pointer;
+}
+
+.lightbox__img {
+  width: 60%;
+  height: 80%;
+  overflow: hidden;
+  border-radius: 5px;
+  filter: drop-shadow(-5px 10px 30px rgba(0, 0, 0, 0.25));
+}
+
+.lightbox__img img,
+.lightbox__img video {
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+}
+
+.lightbox__left-controls,
+.lightbox__right-controls {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.lightbox__close {
+  margin: 35px;
+  position: absolute;
+  top: -5%;
+  cursor: pointer;
+}
