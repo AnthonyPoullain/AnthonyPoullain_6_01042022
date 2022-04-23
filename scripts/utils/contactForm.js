@@ -32,9 +32,9 @@ const contactBtn = document.querySelector('#contact-form .contact_button');
 const inputEls = Array.from(
   document.querySelectorAll('#contact-form input, #contact-form textarea')
 );
-const formData = {};
 contactBtn.addEventListener('click', (e) => {
   e.preventDefault();
+  const formData = {};
   inputEls.forEach((el) => {
     formData[el.name] = el.value;
   });

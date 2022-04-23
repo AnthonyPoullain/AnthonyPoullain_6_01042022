@@ -1,4 +1,4 @@
-const media = [];
+// const media = [];
 let currentMediaIndex;
 
 // Keyboard shortcuts
@@ -21,26 +21,25 @@ document.addEventListener('keydown', function (event) {
 });
 
 // Select loaded media and push it to media array
-function getMedia() {
-  if (media.length > 0) return;
-  const mediaEl = document.querySelectorAll(
-    '.media-card__img > img, .media-card__img > video'
-  );
-  mediaEl.forEach((el) => {
-    media.push(el);
-  });
-  listenForClick();
-}
+// function getMedia() {
+//   if (media.length > 0) return;
+//   const mediaEl = document.querySelectorAll(
+//     '.media-card__img > img, .media-card__img > video'
+//   );
+//   mediaEl.forEach((el) => {
+//     media.push(el);
+//   });
+//   listenForClick();
+// }
 
 function displayLightbox(mediaIndex) {
   document.querySelector('.lightbox').style.display = 'flex';
   document.querySelector('.lightbox__img').innerHTML = '';
-  document
-    .querySelector('.lightbox__img')
-    .insertAdjacentElement(
-      'afterbegin',
-      createZoomedMediaEl(media[mediaIndex])
-    );
+  document.querySelector('.lightbox__img').insertAdjacentElement(
+    'afterbegin',
+    // eslint-disable-next-line no-undef
+    createZoomedMediaEl(displayedMedia[mediaIndex])
+  );
   currentMediaIndex = mediaIndex;
 }
 
@@ -49,7 +48,8 @@ function closeLightbox() {
 }
 
 function listenForClick() {
-  media.forEach((item, index) => {
+  // eslint-disable-next-line no-undef
+  displayedMedia.forEach((item, index) => {
     ['click', 'keypress'].forEach((evt) =>
       item.addEventListener(evt, () => displayLightbox(index))
     );
@@ -69,8 +69,10 @@ function createZoomedMediaEl(mediaElement) {
 }
 
 function nextMedia() {
-  if (currentMediaIndex === media.length - 1) return;
-  const nextImg = media[currentMediaIndex + 1];
+  // eslint-disable-next-line no-undef
+  if (currentMediaIndex === displayedMedia.length - 1) return;
+  // eslint-disable-next-line no-undef
+  const nextImg = displayedMedia[currentMediaIndex + 1];
   currentMediaIndex++;
   document
     .querySelector('.lightbox__img img, .lightbox__img video')
@@ -79,7 +81,8 @@ function nextMedia() {
 
 function previousMedia() {
   if (!currentMediaIndex) return;
-  const previousImg = media[currentMediaIndex - 1];
+  // eslint-disable-next-line no-undef
+  const previousImg = displayedMedia[currentMediaIndex - 1];
   currentMediaIndex--;
   document
     .querySelector('.lightbox__img img, .lightbox__img video')
