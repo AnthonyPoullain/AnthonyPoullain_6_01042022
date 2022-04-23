@@ -181,7 +181,7 @@ textarea {
 .media-card__img > video {
   width: 350px;
   height: 300px;
-  transition: 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
 
 .media-card__img:hover > img,

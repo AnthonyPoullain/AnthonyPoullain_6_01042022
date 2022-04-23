@@ -16,6 +16,11 @@
   box-sizing: border-box;
 }
 
+*:focus-visible {
+  border: red solid 3px;
+  outline: none;
+}
+
 a {
   text-decoration: none;
 }

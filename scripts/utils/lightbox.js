@@ -1,6 +1,7 @@
 const media = [];
 let currentMediaIndex;
 
+// Keyboard shortcuts
 document.addEventListener('keydown', function (event) {
   if (event.code === 'ArrowLeft') {
     if (document.querySelector('.lightbox').style.display) {
@@ -19,7 +20,7 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
-// Sélectionner les photos de la page
+// Select loaded media and push it to media array
 function getMedia() {
   if (media.length > 0) return;
   const mediaEl = document.querySelectorAll(
@@ -31,26 +32,32 @@ function getMedia() {
   listenForClick();
 }
 
+function displayLightbox(mediaIndex) {
+  document.querySelector('.lightbox').style.display = 'flex';
+  document.querySelector('.lightbox__img').innerHTML = '';
+  document
+    .querySelector('.lightbox__img')
+    .insertAdjacentElement(
+      'afterbegin',
+      createZoomedMediaEl(media[mediaIndex])
+    );
+  currentMediaIndex = mediaIndex;
+}
+
 function closeLightbox() {
   document.querySelector('.lightbox').style.display = 'none';
 }
 
 function listenForClick() {
   media.forEach((item, index) => {
-    item.addEventListener('click', () => {
-      document.querySelector('.lightbox').style.display = 'flex';
-
-      document.querySelector('.lightbox__img').innerHTML = '';
-      document
-        .querySelector('.lightbox__img')
-        .insertAdjacentElement('afterbegin', zoomedMedia(media[index]));
-      currentMediaIndex = index;
-    });
+    ['click', 'keypress'].forEach((evt) =>
+      item.addEventListener(evt, () => displayLightbox(index))
+    );
   });
 }
 
 // Generate the zoomed-in media HTML element
-function zoomedMedia(mediaElement) {
+function createZoomedMediaEl(mediaElement) {
   mediaElement = mediaElement.cloneNode();
   mediaElement.removeAttribute('onload');
   mediaElement.removeAttribute('tabindex');
@@ -61,13 +68,13 @@ function zoomedMedia(mediaElement) {
   return mediaElement;
 }
 
-// Display the next media
 function nextMedia() {
   if (currentMediaIndex === media.length - 1) return;
   const nextImg = media[currentMediaIndex + 1];
   currentMediaIndex++;
-  console.log();
-  document.querySelector('.lightbox__img *').replaceWith(zoomedMedia(nextImg));
+  document
+    .querySelector('.lightbox__img img, .lightbox__img video')
+    .replaceWith(createZoomedMediaEl(nextImg));
 }
 
 function previousMedia() {
@@ -75,6 +82,6 @@ function previousMedia() {
   const previousImg = media[currentMediaIndex - 1];
   currentMediaIndex--;
   document
-    .querySelector('.lightbox__img *')
-    .replaceWith(zoomedMedia(previousImg));
+    .querySelector('.lightbox__img img, .lightbox__img video')
+    .replaceWith(createZoomedMediaEl(previousImg));
 }

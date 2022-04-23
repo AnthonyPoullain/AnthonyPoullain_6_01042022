@@ -6,9 +6,7 @@ function photographerFactory(data) {
     // Creating HTML elements
     const photographerProfile = document.createElement('article');
     const photographerLink = document.createElement('a');
-    photographerLink.href = `./photographer.html?id=${id}`;
     const photographerImg = document.createElement('img');
-    photographerImg.setAttribute('src', picture);
     const photographerName = document.createElement('h2');
     const photographerCity = document.createElement('h3');
     const photographerTagline = document.createElement('p');
@@ -29,8 +27,11 @@ function photographerFactory(data) {
     photographerTagline.textContent = tagline;
     photographerPrice.textContent = `${price}€/jour`;
 
-    // Setting accessibility attributes
+    // Setting attributes
     photographerLink.setAttribute('aria-label', `${name}`);
+    photographerLink.setAttribute('href', `./photographer.html?id=${id}`);
+    photographerImg.setAttribute('src', picture);
+    photographerImg.setAttribute('alt', '');
 
     // Appending html children elements to the main element
     photographerProfile.appendChild(photographerLink);
@@ -50,7 +51,6 @@ function photographerFactory(data) {
     const photographerDescription = document.createElement('div');
     const photographerImgContainer = document.createElement('div');
     const photographerImg = document.createElement('img');
-    photographerImg.setAttribute('src', picture);
     const photographerName = document.createElement('h2');
     const photographerCity = document.createElement('h3');
     const photographerTagline = document.createElement('p');
@@ -67,7 +67,8 @@ function photographerFactory(data) {
     photographerCity.textContent = city;
     photographerTagline.textContent = tagline;
 
-    // Setting accessibility attributes
+    // Setting attributes
+    photographerImg.setAttribute('src', picture);
     photographerImg.setAttribute('alt', `${name}`);
 
     // Appending html children elements to the main element
@@ -120,7 +121,7 @@ function mediaFactory(data) {
     const mediaSection = document.createElement('section');
     mediaSection.classList.add('media-section');
 
-    data.forEach((item) => {
+    data.forEach((item, index) => {
       const {
         // id,
         // photographerId,
@@ -143,23 +144,20 @@ function mediaFactory(data) {
       const mediaCard = document.createElement('article');
       const mediaThumbnail = document.createElement('div');
       const media = document.createElement(`${item.image ? 'img' : 'video'}`);
-      media.setAttribute('src', mediaPath);
-      media.setAttribute('aria-label', `${title}, closeup view`);
-      media.setAttribute('onload', 'getMedia()');
-      media.setAttribute('tabindex', '0');
       const mediaDescription = document.createElement('div');
       const mediaTitle = document.createElement('h2');
       const mediaLikes = document.createElement('span');
       const mediaHeart = document.createElement('i');
-
-      // Setting classes
-      mediaCard.classList.add('media-card');
+      // Video play icon overlay
       if (item.video) {
         const playIcon = document.createElement('i');
         playIcon.classList.add('fa-solid');
         playIcon.classList.add('fa-circle-play');
         mediaThumbnail.insertAdjacentElement('afterbegin', playIcon);
       }
+
+      // Setting classes
+      mediaCard.classList.add('media-card');
       mediaThumbnail.classList.add('media-card__img');
       mediaDescription.classList.add('media-card__description');
       mediaTitle.classList.add('media-card__title');
@@ -170,6 +168,12 @@ function mediaFactory(data) {
       // Setting text content
       mediaTitle.textContent = title;
       mediaLikes.textContent = likes;
+
+      // Setting attributes
+      media.setAttribute('src', mediaPath);
+      media.setAttribute('aria-label', `${title}, closeup view`);
+      media.setAttribute('tabindex', '0');
+      if (index === data.length - 1) media.setAttribute('onload', 'getMedia()');
 
       // Appending html children elements to the main card element
       mediaSection.appendChild(mediaCard);

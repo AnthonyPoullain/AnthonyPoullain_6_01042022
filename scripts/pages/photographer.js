@@ -1,5 +1,6 @@
 const params = new URL(document.location).searchParams;
 const id = parseInt(params.get('id'));
+let displayedMedia;
 
 async function getPhotographers() {
   // fetching the photographers data
@@ -21,12 +22,12 @@ async function getPhotographer() {
   const media = photographers.media.filter(
     (element) => element.photographerId === id
   );
-  // adding the totalLikes to photographer data
+  // adding totalLikes to photographer data
   photographer.totalLikes = media.reduce(
     (total, currentItem) => total + currentItem.likes,
     0
   );
-  // adding the photographerName to the media data
+  // adding photographerName to the media data
   media.forEach((item) => (item.photographerName = photographer.name));
   return { photographer: photographer, media: [...media] };
 }
@@ -52,6 +53,15 @@ function displayMedia(photographer) {
   const mediaModel = mediaFactory(photographer);
   const mediaElement = mediaModel.getUserMediaDOM();
   document.querySelector('#main').appendChild(mediaElement);
+  const displayedMedia = mediaElement.querySelectorAll('img, video');
+  return [...displayedMedia];
+  // const displayedMediaData = [];
+  // [...mediaElement.children].forEach((child) => {
+  //   displayedMediaData.push({
+  //     title: child.querySelector('.media-card__title').textContent,
+  //     src: child.querySelector('video, img').src,
+  //   });
+  // });
 }
 
 function displayInfoBar(photographer) {
@@ -65,7 +75,7 @@ async function init() {
   // Récupère les datas des photographes
   const photographer = await getPhotographer();
   displayHeader(photographer.photographer);
-  displayMedia(photographer.media);
+  displayedMedia = displayMedia(photographer.media);
   displayInfoBar(photographer.photographer);
 }
 
