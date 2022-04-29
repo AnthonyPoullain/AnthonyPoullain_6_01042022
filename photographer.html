@@ -25,11 +25,21 @@
       </a>
     </header>
     <main id="main">
-      <div class="photograph-header">
+      <section class="photograph-header">
         <button class="contact_button" onclick="displayModal()">
           Contactez-moi
         </button>
-      </div>
+      </section>
+      <section class="sorting">
+        <h2 class="sorting__title">Trier par</h2>
+        <div class="sorting__menu">
+          <select>
+            <option value="popularity">Popularité</option>
+            <option value="date">Date</option>
+            <option value="title">Titre</option>
+          </select>
+        </div>
+      </section>
     </main>
     <div id="contact_modal" class="modal" aria-labelledby="2">
       <header>
@@ -59,13 +69,15 @@
     <div class="lightbox">
       <div class="lightbox__left-controls">
         <img
-          id="right-arrow"
+          id="left-arrow"
           class="lightbox__arrow"
           src="assets/icons/left-arrow.svg"
           alt="Previous image"
           tabindex="O"
           onclick="previousMedia()"
         />
+        `
+        <h2 class="media-card__title lightbox__title"></h2>
       </div>
       <div class="lightbox__img"></div>
       <div class="lightbox__right-controls">
@@ -76,7 +88,7 @@
           onclick="closeLightbox()"
         />
         <img
-          id="left-arrow"
+          id="right-arrow"
           class="lightbox__arrow"
           src="assets/icons/right-arrow.svg"
           alt="Next image"
@@ -85,9 +97,9 @@
         />
       </div>
     </div>
+    <script src="/scripts/utils/lightbox.js"></script>
     <script src="/scripts/factories/photographer.js"></script>
     <script src="/scripts/pages/photographer.js"></script>
     <script src="/scripts/utils/contactForm.js"></script>
-    <script src="/scripts/utils/lightbox.js"></script>
   </body>
 </html>

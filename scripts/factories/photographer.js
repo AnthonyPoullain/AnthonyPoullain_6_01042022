@@ -173,8 +173,8 @@ function mediaFactory(data) {
       media.setAttribute('src', mediaPath);
       media.setAttribute('aria-label', `${title}, closeup view`);
       media.setAttribute('tabindex', '0');
-      if (index === data.length - 1)
-        media.setAttribute('onload', 'listenForClick()');
+      // if (index === data.length - 1)
+      //   media.setAttribute('onload', 'listenForClick()');
 
       // Appending html children elements to the main card element
       mediaSection.appendChild(mediaCard);

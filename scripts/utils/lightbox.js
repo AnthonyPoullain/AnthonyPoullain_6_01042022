@@ -20,40 +20,25 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
-// Select loaded media and push it to media array
-// function getMedia() {
-//   if (media.length > 0) return;
-//   const mediaEl = document.querySelectorAll(
-//     '.media-card__img > img, .media-card__img > video'
-//   );
-//   mediaEl.forEach((el) => {
-//     media.push(el);
-//   });
-//   listenForClick();
-// }
-
-function displayLightbox(mediaIndex) {
-  document.querySelector('.lightbox').style.display = 'flex';
-  document.querySelector('.lightbox__img').innerHTML = '';
-  document.querySelector('.lightbox__img').insertAdjacentElement(
+function openLightbox(mediaIndex) {
+  const lightbox = document.querySelector('.lightbox');
+  const lightboxMedia = document.querySelector('.lightbox__img');
+  const lightboxTitle = document.querySelector('.lightbox__title');
+  if (lightbox.style.display !== 'flex') lightbox.style.display = 'flex';
+  lightboxMedia.innerHTML = '';
+  lightboxMedia.insertAdjacentElement(
     'afterbegin',
     // eslint-disable-next-line no-undef
-    createZoomedMediaEl(displayedMedia[mediaIndex])
+    createZoomedMediaEl(displayedMedia[mediaIndex].querySelector('img, video'))
   );
+  lightboxTitle.textContent =
+    // eslint-disable-next-line no-undef
+    displayedMedia[mediaIndex].querySelector('.media-card__title').textContent;
   currentMediaIndex = mediaIndex;
 }
 
 function closeLightbox() {
   document.querySelector('.lightbox').style.display = 'none';
-}
-
-function listenForClick() {
-  // eslint-disable-next-line no-undef
-  displayedMedia.forEach((item, index) => {
-    ['click', 'keypress'].forEach((evt) =>
-      item.addEventListener(evt, () => displayLightbox(index))
-    );
-  });
 }
 
 // Generate the zoomed-in media HTML element
@@ -71,20 +56,10 @@ function createZoomedMediaEl(mediaElement) {
 function nextMedia() {
   // eslint-disable-next-line no-undef
   if (currentMediaIndex === displayedMedia.length - 1) return;
-  // eslint-disable-next-line no-undef
-  const nextImg = displayedMedia[currentMediaIndex + 1];
-  currentMediaIndex++;
-  document
-    .querySelector('.lightbox__img img, .lightbox__img video')
-    .replaceWith(createZoomedMediaEl(nextImg));
+  openLightbox(currentMediaIndex + 1);
 }
 
 function previousMedia() {
   if (!currentMediaIndex) return;
-  // eslint-disable-next-line no-undef
-  const previousImg = displayedMedia[currentMediaIndex - 1];
-  currentMediaIndex--;
-  document
-    .querySelector('.lightbox__img img, .lightbox__img video')
-    .replaceWith(createZoomedMediaEl(previousImg));
+  openLightbox(currentMediaIndex - 1);
 }
