@@ -113,10 +113,26 @@ async function init() {
   // Sorting media elements
   const sortingMenu = document.querySelector('.sorting__menu select');
   sortMedia(photographer.media, sortingMenu.value);
+  // Listen for clicks on media once they are loaded
   listenForClick();
   sortingMenu.addEventListener('change', () => {
     sortMedia(photographer.media, sortingMenu.value);
     listenForClick();
+  });
+
+  // Play video on hover & focus
+  const videos = document.querySelectorAll('video');
+  videos.forEach((video) => {
+    ['mouseover', 'focus'].forEach((evt) => {
+      video.addEventListener(evt, () => {
+        video.play();
+      });
+    });
+    ['mouseleave', 'focusout'].forEach((evt) => {
+      video.addEventListener(evt, () => {
+        video.pause();
+      });
+    });
   });
 }
 
