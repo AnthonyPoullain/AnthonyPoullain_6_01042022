@@ -1,51 +1,50 @@
-// const media = [];
+/* global displayedMedia */
+
+// Global media index for currently viewed in lightbox (allows for arrow buttons increment/decrementation)
 let currentMediaIndex;
+
+// DOM elements
+const lightbox = document.querySelector('.lightbox');
+const lightboxMedia = document.querySelector('.lightbox__img');
+const lightboxTitle = document.querySelector('.lightbox__title');
 
 // Keyboard shortcuts
 document.addEventListener('keydown', function (event) {
-  if (event.code === 'ArrowLeft') {
-    if (document.querySelector('.lightbox').style.display) {
+  const lightboxIsOpen = lightbox.style.display === 'flex';
+  if (lightboxIsOpen) {
+    if (event.code === 'ArrowLeft') {
       previousMedia();
     }
-  }
-  if (event.code === 'ArrowRight') {
-    if (document.querySelector('.lightbox').style.display) {
+    if (event.code === 'ArrowRight') {
       nextMedia();
     }
-  }
-  if (event.code === 'Escape') {
-    if (document.querySelector('.lightbox').style.display) {
+    if (event.code === 'Escape') {
       closeLightbox();
     }
   }
 });
 
 function openLightbox(mediaIndex) {
-  const lightbox = document.querySelector('.lightbox');
-  const lightboxMedia = document.querySelector('.lightbox__img');
-  const lightboxTitle = document.querySelector('.lightbox__title');
   if (lightbox.style.display !== 'flex') lightbox.style.display = 'flex';
   lightboxMedia.innerHTML = '';
   lightboxMedia.insertAdjacentElement(
     'afterbegin',
-    // eslint-disable-next-line no-undef
     createZoomedMediaEl(displayedMedia[mediaIndex].querySelector('img, video'))
   );
   lightboxTitle.textContent =
-    // eslint-disable-next-line no-undef
     displayedMedia[mediaIndex].querySelector('.media-card__title').textContent;
   currentMediaIndex = mediaIndex;
 }
 
 function closeLightbox() {
-  document.querySelector('.lightbox').style.display = 'none';
+  if (lightbox.style.display !== 'none') lightbox.style.display = 'none';
 }
 
-// Generate the zoomed-in media HTML element
+// Generate the zoomed-in media HTML element from the clicked element
 function createZoomedMediaEl(mediaElement) {
   mediaElement = mediaElement.cloneNode();
-  mediaElement.removeAttribute('onload');
   mediaElement.removeAttribute('tabindex');
+  mediaElement.removeAttribute('aria-label');
   if (mediaElement.nodeName === 'VIDEO') {
     mediaElement.setAttribute('autoplay', '');
     mediaElement.setAttribute('controls', '');
@@ -54,7 +53,6 @@ function createZoomedMediaEl(mediaElement) {
 }
 
 function nextMedia() {
-  // eslint-disable-next-line no-undef
   if (currentMediaIndex === displayedMedia.length - 1) return;
   openLightbox(currentMediaIndex + 1);
 }

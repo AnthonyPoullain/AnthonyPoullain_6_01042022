@@ -1,9 +1,13 @@
+/* global openLightbox */
+/* global photographerFactory */
+/* global mediaFactory */
+
 const params = new URL(document.location).searchParams;
 const id = parseInt(params.get('id'));
 let displayedMedia;
 
 async function getPhotographers() {
-  // fetching the photographers data
+  // Fetch photographers data
   const response = await fetch('./data/photographers.json').catch(
     console.error
   );
@@ -22,19 +26,18 @@ async function getPhotographer() {
   const media = photographers.media.filter(
     (element) => element.photographerId === id
   );
-  // adding totalLikes to photographer data
+  // Add totalLikes to photographer data
   photographer.totalLikes = media.reduce(
     (total, currentItem) => total + currentItem.likes,
     0
   );
-  // adding photographerName to the media data
+  // Add photographerName to media data
   media.forEach((item) => (item.photographerName = photographer.name));
   return { photographer: photographer, media: [...media] };
 }
 
 function displayHeader(photographer) {
   const photographerHeader = document.querySelector('.photograph-header');
-  // eslint-disable-next-line no-undef
   const photographerModel = photographerFactory(photographer);
   const { photographerDescription, photographerImgContainer } =
     photographerModel.getUserHeaderDOM();
@@ -49,7 +52,6 @@ function displayHeader(photographer) {
 }
 
 function displayMedia(photographer) {
-  // eslint-disable-next-line no-undef
   const mediaModel = mediaFactory(photographer);
   const mediaElement = mediaModel.getUserMediaDOM();
   document
@@ -59,7 +61,6 @@ function displayMedia(photographer) {
 }
 
 function displayInfoBar(photographer) {
-  // eslint-disable-next-line no-undef
   const infoBarModel = photographerFactory(photographer);
   const infoBarElement = infoBarModel.getUserInfoBarDOM();
   document.querySelector('#main').appendChild(infoBarElement);
@@ -92,10 +93,9 @@ function sortMedia(data, sortingMethod) {
   data.forEach((el) => mediaSection.appendChild(el.html));
 }
 
-function listenForClick() {
+function listenForClickOnMedia() {
   document.querySelectorAll('.media-card__img').forEach((item, index) => {
     ['click', 'keypress'].forEach((evt) =>
-      // eslint-disable-next-line no-undef
       item.addEventListener(evt, () => openLightbox(index))
     );
   });
@@ -104,20 +104,24 @@ function listenForClick() {
 async function init() {
   // Get photograph data
   const photographer = await getPhotographer();
-  // Display the data
+
+  // Display data
   displayHeader(photographer.photographer);
   displayMedia(photographer.media);
   displayInfoBar(photographer.photographer);
-  // Putting each media HTML element to its corresponding photographer.media object for ease of access
+
+  // Put HTML meia element to its corresponding photographer.media object for ease of access
   photographer.media.forEach((el, i) => (el.html = displayedMedia[i]));
-  // Sorting media elements
+
+  // Sort media elements
   const sortingMenu = document.querySelector('.sorting__menu select');
   sortMedia(photographer.media, sortingMenu.value);
-  // Listen for clicks on media once they are loaded
-  listenForClick();
+  // Listen for clicks once media loaded and sorted
+  listenForClickOnMedia();
   sortingMenu.addEventListener('change', () => {
     sortMedia(photographer.media, sortingMenu.value);
-    listenForClick();
+    // Listen again if sorting value changes to update array order
+    listenForClickOnMedia();
   });
 
   // Play video on hover & focus
@@ -131,6 +135,7 @@ async function init() {
     ['mouseleave', 'focusout'].forEach((evt) => {
       video.addEventListener(evt, () => {
         video.pause();
+        video.currentTime = 0;
       });
     });
   });
