@@ -95,9 +95,12 @@ function sortMedia(data, sortingMethod) {
 
 function listenForClickOnMedia() {
   document.querySelectorAll('.media-card__img').forEach((item, index) => {
-    ['click', 'keypress'].forEach((evt) =>
-      item.addEventListener(evt, () => openLightbox(index))
-    );
+    ['click', 'keydown'].forEach((evt) => {
+      item.addEventListener(evt, (evt) => {
+        if (evt.type === 'keydown' && evt.code !== 'Enter') return;
+        openLightbox(index);
+      });
+    });
   });
 }
 
@@ -120,7 +123,7 @@ async function init() {
   listenForClickOnMedia();
   sortingMenu.addEventListener('change', () => {
     sortMedia(photographer.media, sortingMenu.value);
-    // Listen again if sorting value changes to update array order
+    // Listen again if sorting value changes to update displayedMedia array order
     listenForClickOnMedia();
   });
 

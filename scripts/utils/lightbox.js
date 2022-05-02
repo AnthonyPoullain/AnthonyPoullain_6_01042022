@@ -9,7 +9,7 @@ const lightboxMedia = document.querySelector('.lightbox__img');
 const lightboxTitle = document.querySelector('.lightbox__title');
 
 // Keyboard shortcuts
-document.addEventListener('keydown', function (event) {
+document.addEventListener('keydown', (event) => {
   const lightboxIsOpen = lightbox.style.display === 'flex';
   if (lightboxIsOpen) {
     if (event.code === 'ArrowLeft') {

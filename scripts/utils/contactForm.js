@@ -1,7 +1,10 @@
+/* global id */
+/* global getPhotographer */
+
 // keyboard events
 document.addEventListener('keydown', function (event) {
   if (event.code === 'Escape') {
-    if (document.querySelector('#contact_modal').style.display) {
+    if (document.querySelector('#contact_modal').style.display !== 'none') {
       closeModal();
     }
   }
@@ -19,7 +22,6 @@ function closeModal() {
 
 async function displayName() {
   const title = document.querySelector('.modal h2');
-  // eslint-disable-next-line no-undef
   const photographer = await getPhotographer(id);
   title.insertAdjacentHTML(
     'beforeend',
