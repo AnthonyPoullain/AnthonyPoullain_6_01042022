@@ -85,10 +85,12 @@ function photographerFactory(data) {
     const infoBar = document.createElement('div');
     const photographerLikes = document.createElement('span');
     const photographerPrice = document.createElement('span');
+    const infoBarLeft = document.createElement('div');
     const heart = document.createElement('i');
 
     // Set classes
     infoBar.classList.add('info-bar');
+    infoBarLeft.classList.add('info-bar__left');
     photographerLikes.classList.add('info-bar__likes');
     photographerPrice.classList.add('info-bar__price');
     heart.classList.add('fa-solid');
@@ -99,8 +101,9 @@ function photographerFactory(data) {
     photographerPrice.textContent = `${price}€/jour`;
 
     // Append html children elements to main element
-    photographerLikes.appendChild(heart);
-    infoBar.appendChild(photographerLikes);
+    infoBar.appendChild(infoBarLeft);
+    infoBarLeft.appendChild(photographerLikes);
+    infoBarLeft.appendChild(heart);
     infoBar.appendChild(photographerPrice);
 
     // Return main element
@@ -173,6 +176,7 @@ function mediaFactory(data) {
       media.setAttribute('src', mediaPath);
       media.setAttribute('aria-label', `${title}, closeup view`);
       media.setAttribute('tabindex', '0');
+      mediaHeartBtn.setAttribute('data-liked', 'false');
 
       // Append html children elements to main card element
       mediaSection.appendChild(mediaCard);

@@ -104,6 +104,25 @@ function listenForClickOnMedia() {
   });
 }
 
+function listenForLikes() {
+  const hearts = document.querySelectorAll('.media-card__heart-btn');
+  const likes = document.querySelectorAll('.media-card__likes');
+  const totalLikes = document.querySelector('.info-bar__likes');
+  hearts.forEach((heart, index) => {
+    heart.addEventListener('click', () => {
+      if (heart.dataset.liked === 'false') {
+        parseInt(likes[index].textContent++);
+        parseInt(totalLikes.textContent++);
+        heart.dataset.liked = 'true';
+        return;
+      }
+      parseInt(likes[index].textContent--);
+      parseInt(totalLikes.textContent--);
+      heart.dataset.liked = 'false';
+    });
+  });
+}
+
 async function init() {
   // Get photograph data
   const photographer = await getPhotographer();
@@ -121,6 +140,7 @@ async function init() {
   sortMedia(photographer.media, sortingMenu.value);
   // Listen for clicks once media loaded and sorted
   listenForClickOnMedia();
+  listenForLikes();
   sortingMenu.addEventListener('change', () => {
     sortMedia(photographer.media, sortingMenu.value);
     // Listen again if sorting value changes to update displayedMedia array order
