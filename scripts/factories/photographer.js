@@ -144,6 +144,7 @@ function mediaFactory(data) {
       const mediaDescription = document.createElement('div');
       const mediaTitle = document.createElement('h2');
       const mediaLikes = document.createElement('span');
+      const mediaHeartBtn = document.createElement('button');
       const mediaHeart = document.createElement('i');
 
       // Video play icon overlay
@@ -160,6 +161,7 @@ function mediaFactory(data) {
       mediaDescription.classList.add('media-card__description');
       mediaTitle.classList.add('media-card__title');
       mediaLikes.classList.add('media-card__likes');
+      mediaHeartBtn.classList.add('media-card__heart-btn');
       mediaHeart.classList.add('fa-solid');
       mediaHeart.classList.add('fa-heart');
 
@@ -179,7 +181,8 @@ function mediaFactory(data) {
       mediaThumbnail.appendChild(media);
       mediaDescription.appendChild(mediaTitle);
       mediaDescription.appendChild(mediaLikes);
-      mediaLikes.appendChild(mediaHeart);
+      mediaHeartBtn.appendChild(mediaHeart);
+      mediaDescription.appendChild(mediaHeartBtn);
     });
     // Return main element
     return mediaSection;
