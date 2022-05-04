@@ -66,14 +66,13 @@
         </button>
       </form>
     </div>
-    <div class="lightbox">
+    <div class="lightbox" id="lightbox">
       <div class="lightbox__left-controls">
         <img
           id="left-arrow"
           class="lightbox__arrow"
           src="assets/icons/left-arrow.svg"
           alt="Previous image"
-          tabindex="O"
           onclick="previousMedia()"
         />
         <h2 class="media-card__title lightbox__title"></h2>
@@ -91,13 +90,12 @@
           class="lightbox__arrow"
           src="assets/icons/right-arrow.svg"
           alt="Next image"
-          tabindex="O"
           onclick="nextMedia()"
         />
       </div>
     </div>
-    <script src="/scripts/utils/lightbox.js"></script>
     <script src="/scripts/factories/photographer.js"></script>
+    <script src="/scripts/utils/lightbox.js"></script>
     <script src="/scripts/pages/photographer.js"></script>
     <script src="/scripts/utils/contactForm.js"></script>
   </body>

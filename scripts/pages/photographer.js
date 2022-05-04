@@ -123,6 +123,38 @@ function listenForLikes() {
   });
 }
 
+function trapFocus(modal) {
+  // Trap focus inside model
+  const focusableElements =
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+  const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
+  const focusableContent = modal.querySelectorAll(focusableElements);
+  const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
+
+  document.addEventListener('keydown', function (e) {
+    const isTabPressed = e.code === 'Tab';
+
+    if (!isTabPressed) return;
+
+    if (e.shiftKey) {
+      // if shift key pressed for shift + tab combination
+      if (document.activeElement === firstFocusableElement) {
+        lastFocusableElement.focus(); // add focus for the last focusable element
+        e.preventDefault();
+      }
+    } else {
+      // if tab key is pressed
+      if (document.activeElement === lastFocusableElement) {
+        // if focused has reached to last focusable element then focus first focusable element after pressing tab
+        firstFocusableElement.focus(); // add focus for the first focusable element
+        e.preventDefault();
+      }
+    }
+  });
+
+  firstFocusableElement.focus();
+}
+
 async function init() {
   // Get photograph data
   const photographer = await getPhotographer();
@@ -132,7 +164,7 @@ async function init() {
   displayMedia(photographer.media);
   displayInfoBar(photographer.photographer);
 
-  // Put HTML meia element to its corresponding photographer.media object for ease of access
+  // Put HTML media element to its corresponding photographer.media object for ease of access
   photographer.media.forEach((el, i) => (el.html = displayedMedia[i]));
 
   // Sort media elements
