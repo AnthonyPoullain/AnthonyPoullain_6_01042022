@@ -2,7 +2,7 @@
 /* global getPhotographer */
 /* global trapFocus */
 
-// Keyboard shortcuts
+// ========== Keyboard shortcuts ==========
 document.addEventListener('keydown', function (event) {
   if (event.code === 'Escape') {
     if (document.querySelector('#contact_modal').style.display !== 'none') {
@@ -11,19 +11,16 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
-// Trap focus inside modal
+// ========== Trap focus ==========
 function trapFocus(modal) {
   const focusableElements =
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
   const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
   const focusableContent = modal.querySelectorAll(focusableElements);
   const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-
   document.addEventListener('keydown', function (e) {
     const isTabPressed = e.code === 'Tab';
-
     if (!isTabPressed) return;
-
     if (e.shiftKey) {
       // if shift key pressed for shift + tab combination
       if (document.activeElement === firstFocusableElement) {
@@ -39,11 +36,10 @@ function trapFocus(modal) {
       }
     }
   });
-
   firstFocusableElement.focus();
 }
 
-// Modal functionalities
+// ========== Modal functionalities ==========
 function displayModal() {
   const modal = document.getElementById('contact_modal');
   modal.style.display = 'block';

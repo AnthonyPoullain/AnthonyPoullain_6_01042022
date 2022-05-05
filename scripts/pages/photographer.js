@@ -6,6 +6,7 @@ const params = new URL(document.location).searchParams;
 const id = parseInt(params.get('id'));
 let displayedMedia;
 
+// ========== Data functions ==========
 async function getPhotographers() {
   // Fetch photographers data
   const response = await fetch('./data/photographers.json').catch(
@@ -36,6 +37,7 @@ async function getPhotographer() {
   return { photographer: photographer, media: [...media] };
 }
 
+// ========== Display functions ==========
 function displayHeader(photographer) {
   const photographerHeader = document.querySelector('.photograph-header');
   const photographerModel = photographerFactory(photographer);
@@ -58,6 +60,8 @@ function displayMedia(photographer) {
     .querySelector('#main')
     .insertAdjacentElement('beforeend', mediaElement);
   displayedMedia = [...mediaElement.children];
+  // // Put HTML media element to its corresponding photographer.media object for ease of access
+  photographer.forEach((el, i) => (el.html = displayedMedia[i]));
 }
 
 function displayInfoBar(photographer) {
@@ -66,6 +70,7 @@ function displayInfoBar(photographer) {
   document.querySelector('#main').appendChild(infoBarElement);
 }
 
+// ========== Sort function ==========
 function sortMedia(data, sortingMethod) {
   switch (sortingMethod) {
     case 'popularity':
@@ -93,6 +98,7 @@ function sortMedia(data, sortingMethod) {
   data.forEach((el) => mediaSection.appendChild(el.html));
 }
 
+// ========== Listen functions ==========
 function listenForClickOnMedia() {
   document.querySelectorAll('.media-card__img').forEach((item, index) => {
     ['click', 'keydown'].forEach((evt) => {
@@ -123,38 +129,92 @@ function listenForLikes() {
   });
 }
 
-function trapFocus(modal) {
-  // Trap focus inside model
-  const focusableElements =
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-  const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
-  const focusableContent = modal.querySelectorAll(focusableElements);
-  const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
+// ========== Sorting menu ==========
+/* Look for any elements with the class "custom-select": */
+const x = document.getElementsByClassName('custom-select');
+for (let i = 0; i < x.length; i++) {
+  const selElmnt = x[i].getElementsByTagName('select')[0];
+  /* For each element, create a new DIV that will act as the selected item: */
+  const a = document.createElement('DIV');
+  a.setAttribute('class', 'select-selected');
+  a.setAttribute('tabindex', '0');
+  a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+  x[i].appendChild(a);
+  /* For each element, create a new DIV that will contain the option list: */
+  const b = document.createElement('DIV');
+  b.setAttribute('class', 'select-items select-hide');
+  for (let j = 1; j < selElmnt.length; j++) {
+    /* For each option in the original select element,
+    create a new DIV that will act as an option item: */
+    const c = document.createElement('DIV');
+    c.innerHTML = selElmnt.options[j].innerHTML;
+    c.setAttribute('tabindex', '0');
+    [('click', 'keydown')].forEach((evt) => {
+      c.addEventListener(evt, function (evt) {
+        // const keys = ['Enter', 'Tab', 'ShiftLeft', 'ShiftRight'];
+        // if (evt.type === 'keydown' && !keys.includes(evt.code)) return;
+        /* When an item is clicked, update the original select box,
+        and the selected item: */
+        const s = this.parentNode.parentNode.getElementsByTagName('select')[0];
+        const h = this.parentNode.previousSibling;
+        for (let i = 0; i < s.length; i++) {
+          if (s.options[i].innerHTML === this.innerHTML) {
+            s.selectedIndex = i;
+            const previousValue = h.innerHTML;
+            h.innerHTML = this.innerHTML;
+            this.innerHTML = previousValue;
+            // Manually fire change event otherwise addEventListener cant pick it up
+            const e = new Event('change');
+            s.dispatchEvent(e);
+            break;
+          }
+        }
+        h.click();
+      });
+    });
 
-  document.addEventListener('keydown', function (e) {
-    const isTabPressed = e.code === 'Tab';
+    b.appendChild(c);
+  }
+  x[i].appendChild(b);
 
-    if (!isTabPressed) return;
-
-    if (e.shiftKey) {
-      // if shift key pressed for shift + tab combination
-      if (document.activeElement === firstFocusableElement) {
-        lastFocusableElement.focus(); // add focus for the last focusable element
-        e.preventDefault();
-      }
-    } else {
-      // if tab key is pressed
-      if (document.activeElement === lastFocusableElement) {
-        // if focused has reached to last focusable element then focus first focusable element after pressing tab
-        firstFocusableElement.focus(); // add focus for the first focusable element
-        e.preventDefault();
-      }
-    }
+  ['click', 'keydown'].forEach((evt) => {
+    a.addEventListener(evt, function (e) {
+      // if (evt.type === 'keydown' && evt.code !== 'Enter') return;
+      /* When the select box is clicked, close any other select boxes,
+    and open/close the current select box: */
+      e.stopPropagation();
+      closeAllSelect(this);
+      this.nextSibling.classList.toggle('select-hide');
+      this.classList.toggle('select-arrow-active');
+    });
   });
-
-  firstFocusableElement.focus();
 }
 
+function closeAllSelect(elmnt) {
+  /* A function that will close all select boxes in the document,
+  except the current select box: */
+  const arrNo = [];
+  const x = document.getElementsByClassName('select-items');
+  const y = document.getElementsByClassName('select-selected');
+  for (let i = 0; i < y.length; i++) {
+    if (elmnt === y[i]) {
+      arrNo.push(i);
+    } else {
+      y[i].classList.remove('select-arrow-active');
+    }
+  }
+  for (let i = 0; i < x.length; i++) {
+    if (arrNo.indexOf(i)) {
+      x[i].classList.add('select-hide');
+    }
+  }
+}
+
+/* If the user clicks anywhere outside the select box,
+then close all select boxes: */
+document.addEventListener('click', closeAllSelect);
+
+// ========== Init ==========
 async function init() {
   // Get photograph data
   const photographer = await getPhotographer();
@@ -164,11 +224,8 @@ async function init() {
   displayMedia(photographer.media);
   displayInfoBar(photographer.photographer);
 
-  // Put HTML media element to its corresponding photographer.media object for ease of access
-  photographer.media.forEach((el, i) => (el.html = displayedMedia[i]));
-
   // Sort media elements
-  const sortingMenu = document.querySelector('.sorting__menu select');
+  const sortingMenu = document.querySelector('select');
   sortMedia(photographer.media, sortingMenu.value);
   // Listen for clicks once media loaded and sorted
   listenForClickOnMedia();
