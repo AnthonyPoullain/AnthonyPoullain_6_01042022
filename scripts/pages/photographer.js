@@ -176,16 +176,18 @@ async function init() {
   displayInfoBar(photographer.photographer);
 
   // Sort media elements
-  const sortingMenu = document.querySelector('select');
-  sortMedia(photographer.media, sortingMenu.value);
+  // const sortingMenu = document.querySelector('select');
+  // sortMedia(photographer.media, sortingMenu.value);
+  sortMedia(photographer.media);
   // Listen for clicks once media loaded and sorted
   listenForClickOnMedia();
   listenForLikes();
-  sortingMenu.addEventListener('change', () => {
-    sortMedia(photographer.media, sortingMenu.value);
-    // Listen again if sorting value changes to update displayedMedia array order
-    listenForClickOnMedia();
-  });
+
+  // sortingMenu.addEventListener('change', () => {
+  //   sortMedia(photographer.media, sortingMenu.value);
+  //   // Listen again if sorting value changes to update displayedMedia array order
+  //   listenForClickOnMedia();
+  // });
 
   // Play video on hover & focus
   const videos = document.querySelectorAll('video');

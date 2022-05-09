@@ -1,134 +1,387 @@
-/* global trapFocus */
+/*
+ *   This content is licensed according to the W3C Software License at
+ *   https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ */
 
-// Sorting menu
-/* Look for any elements with the class "custom-select": */
-const x = document.getElementsByClassName('custom-select');
-for (let i = 0; i < x.length; i++) {
-  const selElmnt = x[i].getElementsByTagName('select')[0];
-  /* For each element, create a new DIV that will act as the selected item: */
-  const a = document.createElement('BUTTON');
-  a.setAttribute('class', 'select-selected');
-  a.setAttribute('aria-haspopup', 'listbox');
-  a.setAttribute('aria-labelledby', 'sort-by');
-  a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
-  x[i].appendChild(a);
-  /* For each element, create a new DIV that will contain the option list: */
-  const b = document.createElement('UL');
-  b.setAttribute('class', 'select-items select-hide');
-  b.setAttribute('id', 'select-items');
-  b.setAttribute('role', 'listbox');
-  b.setAttribute('aria-activedescendant', '0');
-  for (let j = 0; j < selElmnt.length; j++) {
-    /* For each option in the original select element,
-    create a new DIV that will act as an option item: */
-    const c = document.createElement('LI');
-    c.innerHTML = selElmnt.options[j].innerHTML;
-    c.setAttribute('tabindex', '-1');
-    c.setAttribute('id', `${j}`);
-    c.setAttribute('role', 'option');
-    if (j === 0) {
-      c.setAttribute('aria-selected', 'true');
-      // c.style.display = 'none';
-    }
-    ['click', 'keydown'].forEach((evt) => {
-      c.addEventListener(evt, function (evt) {
-        if (evt.type === 'keydown' && evt.code !== 'Enter') return;
-        /* When an item is clicked, update the original select box,
-        and the selected item: */
-        const s = this.parentNode.parentNode.getElementsByTagName('select')[0];
-        const h = this.parentNode.previousSibling;
-        for (let i = 0; i < s.length; i++) {
-          if (s.options[i].innerHTML === this.innerHTML) {
-            s.selectedIndex = i;
-            document.querySelectorAll('[role="option"]').forEach((option) => {
-              option.removeAttribute('aria-selected');
-              // option.style.display = 'flex';
-            });
-            this.setAttribute('aria-selected', 'true');
-            // this.style.display = 'none';
+'use strict';
 
-            b.setAttribute('aria-activedescendant', this.id);
-            // const previousText = h.innerHTML;
-            h.innerHTML = this.innerHTML;
-            // this.innerHTML = previousText;
-            // Manually fire change event otherwise addEventListener cant pick it up
-            const e = new Event('change');
-            s.dispatchEvent(e);
-            closeAllSelect();
-            break;
-          }
-        }
-      });
-      // h.click();
-    });
+// Save a list of named combobox actions, for future readability
+const SelectActions = {
+  Close: 0,
+  CloseSelect: 1,
+  First: 2,
+  Last: 3,
+  Next: 4,
+  Open: 5,
+  PageDown: 6,
+  PageUp: 7,
+  Previous: 8,
+  Select: 9,
+  Type: 10,
+};
 
-    b.appendChild(c);
-  }
-  x[i].appendChild(b);
+/*
+ * Helper functions
+ */
 
-  a.addEventListener('click', function (e) {
-    /* When the select box is clicked, close any other select boxes,
-    and open/close the current select box: */
-
-    e.stopPropagation();
-    closeAllSelect(this);
-    this.nextSibling.classList.toggle('select-hide');
-    this.classList.toggle('select-arrow-active');
-    if (!this.getAttribute('aria-expanded')) {
-      this.setAttribute('aria-expanded', 'true');
-      // document.querySelector('.select-items [aria-selected="true"]').focus();
-      document.querySelector('.select-items li').focus();
-    } else {
-      this.removeAttribute('aria-expanded');
-    }
+// filter an array of options against an input string
+// returns an array of options that begin with the filter string, case-independent
+function filterOptions(options = [], filter, exclude = []) {
+  return options.filter((option) => {
+    const matches = option.toLowerCase().indexOf(filter.toLowerCase()) === 0;
+    return matches && exclude.indexOf(option) < 0;
   });
 }
 
-function closeAllSelect(elmnt) {
-  /* A function that will close all select boxes in the document,
-  except the current select box: */
-  const arrNo = [];
-  const x = document.getElementsByClassName('select-items');
-  const y = document.getElementsByClassName('select-selected');
-  for (let i = 0; i < y.length; i++) {
-    if (elmnt === y[i]) {
-      arrNo.push(i);
-    } else {
-      y[i].classList.remove('select-arrow-active');
-    }
+// map a key press to an action
+function getActionFromKey(event, menuOpen) {
+  const { key, altKey, ctrlKey, metaKey } = event;
+  const openKeys = ['ArrowDown', 'ArrowUp', 'Enter', ' ']; // all keys that will do the default open action
+  // handle opening when closed
+  if (!menuOpen && openKeys.includes(key)) {
+    return SelectActions.Open;
   }
-  for (let i = 0; i < x.length; i++) {
-    if (arrNo.indexOf(i)) {
-      x[i].classList.add('select-hide');
+
+  // home and end move the selected option when open or closed
+  if (key === 'Home') {
+    return SelectActions.First;
+  }
+  if (key === 'End') {
+    return SelectActions.Last;
+  }
+
+  // handle typing characters when open or closed
+  if (
+    key === 'Backspace' ||
+    key === 'Clear' ||
+    (key.length === 1 && key !== ' ' && !altKey && !ctrlKey && !metaKey)
+  ) {
+    return SelectActions.Type;
+  }
+
+  // handle keys when open
+  if (menuOpen) {
+    if (key === 'ArrowUp' && altKey) {
+      return SelectActions.CloseSelect;
+    } else if (key === 'ArrowDown' && !altKey) {
+      return SelectActions.Next;
+    } else if (key === 'ArrowUp') {
+      return SelectActions.Previous;
+    } else if (key === 'PageUp') {
+      return SelectActions.PageUp;
+    } else if (key === 'PageDown') {
+      return SelectActions.PageDown;
+    } else if (key === 'Escape') {
+      return SelectActions.Close;
+    } else if (key === 'Enter' || key === ' ') {
+      return SelectActions.CloseSelect;
     }
   }
 }
 
-/* If the user clicks anywhere outside the select box,
-then close all select boxes: */
-document.addEventListener('click', closeAllSelect);
+// return the index of an option from an array of options, based on a search string
+// if the filter is multiple iterations of the same letter (e.g "aaa"), then cycle through first-letter matches
+function getIndexByLetter(options, filter, startIndex = 0) {
+  const orderedOptions = [
+    ...options.slice(startIndex),
+    ...options.slice(0, startIndex),
+  ];
+  const firstMatch = filterOptions(orderedOptions, filter)[0];
+  const allSameLetter = (array) => array.every((letter) => letter === array[0]);
 
-// Keyboard accessibility
-document.addEventListener('keydown', (e) => {
-  const sortBtn = document.querySelector('.select-selected');
-
-  if (sortBtn.ariaExpanded) {
-    if (e.key === 'Tab' || e.key === 'Escape') {
-      // e.preventDefault();
-      closeAllSelect();
-      sortBtn.removeAttribute('aria-expanded');
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (document.activeElement.previousSibling) {
-        document.activeElement.previousSibling.focus();
-      }
-    }
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (document.activeElement.nextSibling) {
-        document.activeElement.nextSibling.focus();
-      }
-    }
+  // first check if there is an exact match for the typed string
+  if (firstMatch) {
+    return options.indexOf(firstMatch);
   }
+
+  // if the same letter is being repeated, cycle through first-letter matches
+  else if (allSameLetter(filter.split(''))) {
+    const matches = filterOptions(orderedOptions, filter[0]);
+    return options.indexOf(matches[0]);
+  }
+
+  // if no matches, return -1
+  else {
+    return -1;
+  }
+}
+
+// get an updated option index after performing an action
+function getUpdatedIndex(currentIndex, maxIndex, action) {
+  const pageSize = 10; // used for pageup/pagedown
+
+  switch (action) {
+    case SelectActions.First:
+      return 0;
+    case SelectActions.Last:
+      return maxIndex;
+    case SelectActions.Previous:
+      return Math.max(0, currentIndex - 1);
+    case SelectActions.Next:
+      return Math.min(maxIndex, currentIndex + 1);
+    case SelectActions.PageUp:
+      return Math.max(0, currentIndex - pageSize);
+    case SelectActions.PageDown:
+      return Math.min(maxIndex, currentIndex + pageSize);
+    default:
+      return currentIndex;
+  }
+}
+
+// check if element is visible in browser view port
+function isElementInView(element) {
+  const bounding = element.getBoundingClientRect();
+
+  return (
+    bounding.top >= 0 &&
+    bounding.left >= 0 &&
+    bounding.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) &&
+    bounding.right <=
+      (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
+/*
+ * Select Component
+ * Accepts a combobox element and an array of string options
+ */
+const Select = function (el, options = []) {
+  // element refs
+  this.el = el;
+  this.comboEl = el.querySelector('[role=combobox]');
+  this.listboxEl = el.querySelector('[role=listbox]');
+
+  // data
+  this.idBase = this.comboEl.id || 'combo';
+  this.options = options;
+
+  // state
+  this.activeIndex = 0;
+  this.open = false;
+  this.searchString = '';
+  this.searchTimeout = null;
+
+  // init
+  if (el && this.comboEl && this.listboxEl) {
+    this.init();
+  }
+};
+
+Select.prototype.init = function () {
+  // select first option by default
+  this.comboEl.innerHTML = this.options[0];
+
+  // add event listeners
+  this.comboEl.addEventListener('blur', this.onComboBlur.bind(this));
+  this.comboEl.addEventListener('click', this.onComboClick.bind(this));
+  this.comboEl.addEventListener('keydown', this.onComboKeyDown.bind(this));
+
+  // create options
+  this.options.forEach((option, index) => {
+    const optionEl = this.createOption(option, index);
+    this.listboxEl.appendChild(optionEl);
+  });
+};
+
+Select.prototype.createOption = function (optionText, index) {
+  const optionEl = document.createElement('div');
+  optionEl.setAttribute('role', 'option');
+  optionEl.id = `${this.idBase}-${index}`;
+  optionEl.className =
+    index === 0 ? 'combo-option option-current' : 'combo-option';
+  optionEl.setAttribute('aria-selected', `${index === 0}`);
+  optionEl.innerText = optionText;
+
+  optionEl.addEventListener('change', () => console.log('hello'));
+  optionEl.addEventListener('click', (event) => {
+    event.stopPropagation();
+    this.onOptionClick(index);
+  });
+  optionEl.addEventListener('mousedown', this.onOptionMouseDown.bind(this));
+
+  return optionEl;
+};
+
+Select.prototype.getSearchString = function (char) {
+  // reset typing timeout and start new timeout
+  // this allows us to make multiple-letter matches, like a native select
+  if (typeof this.searchTimeout === 'number') {
+    window.clearTimeout(this.searchTimeout);
+  }
+
+  this.searchTimeout = window.setTimeout(() => {
+    this.searchString = '';
+  }, 500);
+
+  // add most recent letter to saved search string
+  this.searchString += char;
+  return this.searchString;
+};
+
+Select.prototype.onComboBlur = function () {
+  // do not do blur action if ignoreBlur flag has been set
+  if (this.ignoreBlur) {
+    this.ignoreBlur = false;
+    return;
+  }
+
+  // select current option and close
+  if (this.open) {
+    this.selectOption(this.activeIndex);
+    this.updateMenuState(false, false);
+  }
+};
+
+Select.prototype.onComboClick = function () {
+  this.updateMenuState(!this.open, false);
+};
+
+Select.prototype.onComboKeyDown = function (event) {
+  const { key } = event;
+  const max = this.options.length - 1;
+
+  const action = getActionFromKey(event, this.open);
+
+  switch (action) {
+    case SelectActions.Last:
+    case SelectActions.First:
+      this.updateMenuState(true);
+    // intentional fallthrough
+    case SelectActions.Next:
+    case SelectActions.Previous:
+    case SelectActions.PageUp:
+    case SelectActions.PageDown:
+      event.preventDefault();
+      return this.onOptionChange(
+        getUpdatedIndex(this.activeIndex, max, action)
+      );
+    case SelectActions.CloseSelect:
+      event.preventDefault();
+      this.selectOption(this.activeIndex);
+    // intentional fallthrough
+    case SelectActions.Close:
+      event.preventDefault();
+      return this.updateMenuState(false);
+    case SelectActions.Type:
+      return this.onComboType(key);
+    case SelectActions.Open:
+      event.preventDefault();
+      return this.updateMenuState(true);
+  }
+};
+
+Select.prototype.onComboType = function (letter) {
+  // open the listbox if it is closed
+  this.updateMenuState(true);
+
+  // find the index of the first matching option
+  const searchString = this.getSearchString(letter);
+  const searchIndex = getIndexByLetter(
+    this.options,
+    searchString,
+    this.activeIndex + 1
+  );
+
+  // if a match was found, go to it
+  if (searchIndex >= 0) {
+    this.onOptionChange(searchIndex);
+  }
+  // if no matches, clear the timeout and search string
+  else {
+    window.clearTimeout(this.searchTimeout);
+    this.searchString = '';
+  }
+};
+
+Select.prototype.onOptionChange = function (index) {
+  // update state
+  this.activeIndex = index;
+
+  // update aria-activedescendant
+  // this.comboEl.setAttribute('aria-activedescendant', `${this.idBase}-${index}`);
+  const activeDescendant = this.listboxEl.children[0].id;
+  this.comboEl.setAttribute('aria-activedescendant', activeDescendant);
+
+  // update active option styles
+  const options = this.el.querySelectorAll('[role=option]');
+  [...options].forEach((optionEl) => {
+    optionEl.classList.remove('option-current');
+  });
+  options[index].classList.add('option-current');
+};
+
+Select.prototype.onOptionClick = function (index) {
+  this.onOptionChange(index);
+  this.selectOption(index);
+  this.updateMenuState(false);
+};
+
+Select.prototype.onOptionMouseDown = function () {
+  // Clicking an option will cause a blur event,
+  // but we don't want to perform the default keyboard blur action
+  this.ignoreBlur = true;
+};
+
+Select.prototype.selectOption = function (index) {
+  // update state
+  this.activeIndex = index;
+
+  // update displayed value
+  const selected = this.options[index];
+  this.comboEl.innerHTML = selected;
+
+  // update aria-selected
+  const options = this.el.querySelectorAll('[role=option]');
+  [...options].forEach((optionEl) => {
+    optionEl.setAttribute('aria-selected', 'false');
+  });
+
+  options[index].setAttribute('aria-selected', 'true');
+
+  // move selected to the top
+  options[index].parentNode.prepend(options[index]);
+
+  const newOptions = this.el.querySelectorAll('[role=option]');
+
+  // initialize new options order
+  this.options = [];
+  newOptions.forEach((option) => this.options.push(option.innerText));
+
+  // reset active index
+  this.activeIndex = 0;
+};
+
+Select.prototype.updateMenuState = function (open, callFocus = true) {
+  if (this.open === open) {
+    return;
+  }
+
+  // update state
+  this.open = open;
+
+  // update aria-expanded and styles
+  this.comboEl.setAttribute('aria-expanded', `${open}`);
+  open ? this.el.classList.add('open') : this.el.classList.remove('open');
+
+  // update activedescendant
+  const activeID = open ? this.listboxEl.children[0].id : '';
+  this.comboEl.setAttribute('aria-activedescendant', activeID);
+
+  if (activeID === '' && !isElementInView(this.comboEl)) {
+    this.comboEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // move focus back to the combobox, if needed
+  callFocus && this.comboEl.focus();
+};
+
+// init select
+window.addEventListener('load', function () {
+  const options = ['Popularité', 'Date', 'Titre'];
+  const selectEls = document.querySelectorAll('.js-select');
+
+  selectEls.forEach((el) => {
+    new Select(el, options);
+  });
 });

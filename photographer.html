@@ -31,19 +31,36 @@
         </button>
       </section>
       <section class="sorting">
-        <h2 class="sorting__title" id="sort-by">Trier par</h2>
-        <div class="sorting__menu custom-select">
-          <select>
-            <option value="popularity">Popularité</option>
-            <option value="date">Date</option>
-            <option value="title">Titre</option>
-          </select>
+        <label class="sorting__title combo-label" id="combo1-label"
+          >Trier par</label
+        >
+        <div class="combo js-select">
+          <div
+            aria-controls="listbox1"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            aria-labelledby="combo1-label"
+            id="combo1"
+            class="combo-input"
+            role="combobox"
+            tabindex="0"
+          ></div>
+          <div
+            class="combo-menu"
+            role="listbox"
+            id="listbox1"
+            aria-labelledby="combo1-label"
+            tabindex="-1"
+          >
+            <!-- options are inserted here -->
+            <!-- e.g. <div role="option" id="op1">option text</div>  -->
+          </div>
         </div>
       </section>
     </main>
-    <div id="contact_modal" class="modal" aria-labelledby="2">
+    <div id="contact_modal" class="modal" aria-labelledby="contact-me">
       <header>
-        <h2 id="2">Contactez-moi</h2>
+        <h2 id="contact-me">Contactez-moi</h2>
         <img
           id="close-modal"
           tabindex="0"
