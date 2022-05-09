@@ -30,6 +30,14 @@ a {
   text-decoration: none;
 }
 
+button {
+  border: none;
+}
+
+li {
+  list-style: none;
+}
+
 body {
   font-family: 'DM Sans', sans-serif;
   margin: 0;
@@ -55,10 +63,9 @@ h1 {
 }
 
 button:hover,
-button:focus-visible,
-select:hover,
-select:focus-visible {
+button:focus-visible {
   background-color: var(--primary-color-light);
+  color: black;
   border: none;
 }
 

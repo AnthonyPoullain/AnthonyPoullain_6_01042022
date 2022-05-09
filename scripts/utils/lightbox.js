@@ -1,4 +1,5 @@
 /* global displayedMedia */
+/* global trapFocus */
 
 // Global media index for currently viewed in lightbox (allows for arrow buttons increment/decrementation)
 let currentMediaIndex;
@@ -34,9 +35,11 @@ function openLightbox(mediaIndex) {
     'afterbegin',
     createZoomedMediaEl(displayedMedia[mediaIndex].querySelector('img, video'))
   );
-  lightboxTitle.textContent =
+  const mediaTitle =
     displayedMedia[mediaIndex].querySelector('.media-card__title').textContent;
+  lightboxTitle.textContent = mediaTitle;
   currentMediaIndex = mediaIndex;
+  trapFocus(lightbox);
 }
 
 function closeLightbox() {
@@ -47,10 +50,12 @@ function closeLightbox() {
 function createZoomedMediaEl(mediaElement) {
   mediaElement = mediaElement.cloneNode();
   mediaElement.removeAttribute('tabindex');
-  mediaElement.removeAttribute('aria-label');
   if (mediaElement.nodeName === 'VIDEO') {
     mediaElement.setAttribute('autoplay', '');
     mediaElement.setAttribute('controls', '');
+    mediaElement.ariaLabel = mediaElement.ariaLabel.split(', closeup')[0];
+  } else {
+    mediaElement.alt = mediaElement.alt.split(', closeup')[0];
   }
   return mediaElement;
 }

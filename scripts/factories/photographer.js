@@ -174,8 +174,12 @@ function mediaFactory(data) {
 
       // Set attributes
       media.setAttribute('src', mediaPath);
-      media.setAttribute('aria-label', `${title}, closeup view`);
+      media.setAttribute(
+        item.video ? 'aria-label' : 'alt',
+        `${title}, closeup view`
+      );
       media.setAttribute('tabindex', '0');
+      mediaHeartBtn.setAttribute('aria-label', 'likes');
       mediaHeartBtn.setAttribute('data-liked', 'false');
 
       // Append html children elements to main card element

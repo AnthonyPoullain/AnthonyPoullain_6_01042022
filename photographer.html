@@ -31,7 +31,7 @@
         </button>
       </section>
       <section class="sorting">
-        <h2 class="sorting__title">Trier par</h2>
+        <h2 class="sorting__title" id="sort-by">Trier par</h2>
         <div class="sorting__menu custom-select">
           <select>
             <option value="popularity">Popularité</option>
@@ -45,12 +45,15 @@
       <header>
         <h2 id="2">Contactez-moi</h2>
         <img
+          id="close-modal"
+          tabindex="0"
           src="assets/icons/close.svg"
           aria-label="Close Contact form"
+          role="button"
           onclick="closeModal()"
         />
       </header>
-      <form id="contact-form">
+      <form role="dialog" id="contact-form">
         <div>
           <label for="firstname">Prénom</label>
           <input id="firstname" name="firstname" />
@@ -66,9 +69,16 @@
         </button>
       </form>
     </div>
-    <div class="lightbox" id="lightbox">
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-label="Image closeup view"
+    >
       <div class="lightbox__left-controls">
         <img
+          tabindex="0"
+          role="button"
           id="left-arrow"
           class="lightbox__arrow"
           src="assets/icons/left-arrow.svg"
@@ -80,12 +90,16 @@
       <div class="lightbox__img"></div>
       <div class="lightbox__right-controls">
         <img
+          role="button"
+          tabindex="0"
           class="lightbox__close"
           src="assets/icons/close-red.svg"
-          aria-label="Close lightbox"
+          aria-label="Close dialog"
           onclick="closeLightbox()"
         />
         <img
+          role="button"
+          tabindex="0"
           id="right-arrow"
           class="lightbox__arrow"
           src="assets/icons/right-arrow.svg"
@@ -94,9 +108,10 @@
         />
       </div>
     </div>
-    <script src="/scripts/factories/photographer.js"></script>
-    <script src="/scripts/utils/lightbox.js"></script>
-    <script src="/scripts/pages/photographer.js"></script>
-    <script src="/scripts/utils/contactForm.js"></script>
+    <script src="scripts/factories/photographer.js"></script>
+    <script src="scripts/utils/lightbox.js"></script>
+    <script src="scripts/pages/photographer.js"></script>
+    <script src="scripts/utils/contactForm.js"></script>
+    <script src="scripts/utils/sortingMenu.js"></script>
   </body>
 </html>
