@@ -193,10 +193,12 @@ Select.prototype.createOption = function (optionText, index) {
   optionEl.setAttribute('aria-selected', `${index === 0}`);
   optionEl.innerText = optionText;
 
-  optionEl.addEventListener('change', () => console.log('hello'));
   optionEl.addEventListener('click', (event) => {
+    const clickedEl = event.path[0];
+    const options = [...this.listboxEl.children];
+    const currentMenuIndex = options.indexOf(clickedEl);
     event.stopPropagation();
-    this.onOptionClick(index);
+    this.onOptionClick(currentMenuIndex);
   });
   optionEl.addEventListener('mousedown', this.onOptionMouseDown.bind(this));
 
@@ -295,6 +297,8 @@ Select.prototype.onComboType = function (letter) {
 };
 
 Select.prototype.onOptionChange = function (index) {
+  // fuckup here somewhere !!!!
+  // console.log('onOptionChange(index)');
   // update state
   this.activeIndex = index;
 
@@ -312,6 +316,7 @@ Select.prototype.onOptionChange = function (index) {
 };
 
 Select.prototype.onOptionClick = function (index) {
+  // console.log('onOptionClick(index)');
   this.onOptionChange(index);
   this.selectOption(index);
   this.updateMenuState(false);
@@ -324,12 +329,20 @@ Select.prototype.onOptionMouseDown = function () {
 };
 
 Select.prototype.selectOption = function (index) {
+  // console.log('selectOption(index)');
   // update state
   this.activeIndex = index;
 
   // update displayed value
   const selected = this.options[index];
   this.comboEl.innerHTML = selected;
+
+  // update data value
+  this.comboEl.dataset.value = index;
+
+  // Manually fire change event otherwise addEventListener cant pick it up
+  const e = new Event('change');
+  this.comboEl.dispatchEvent(e);
 
   // update aria-selected
   const options = this.el.querySelectorAll('[role=option]');
@@ -338,6 +351,7 @@ Select.prototype.selectOption = function (index) {
   });
 
   options[index].setAttribute('aria-selected', 'true');
+  // console.log(`Updated index: ${options[index].id}`);
 
   // move selected to the top
   options[index].parentNode.prepend(options[index]);
@@ -382,6 +396,7 @@ window.addEventListener('load', function () {
   const selectEls = document.querySelectorAll('.js-select');
 
   selectEls.forEach((el) => {
+    // eslint-disable-next-line no-new
     new Select(el, options);
   });
 });

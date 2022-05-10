@@ -364,6 +364,7 @@ textarea {
   color: #fff;
   top: 28px;
   right: 10px;
+  pointer-events: none;
 }
 
 .combo-input {
@@ -387,6 +388,7 @@ textarea {
   border-radius: 5px 5px 0 0;
 }
 
+.combo-input:hover,
 .combo-input:focus {
   background-color: var(--primary-color-light);
   border: none;
@@ -455,4 +457,5 @@ textarea {
   color: #fff;
   top: 22px;
   right: 10px;
+  pointer-events: none;
 }

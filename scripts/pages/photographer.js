@@ -9,9 +9,7 @@ let displayedMedia;
 //  Data functions
 async function getPhotographers() {
   // Fetch photographers data
-  const response = await fetch('./data/photographers.json').catch(
-    console.error
-  );
+  const response = await fetch('data/photographers.json').catch(console.error);
   const photographers = await response.json().catch(console.error);
   return {
     photographers: [...photographers.photographers],
@@ -73,19 +71,19 @@ function displayInfoBar(photographer) {
 //  Sort function
 function sortMedia(data, sortingMethod) {
   switch (sortingMethod) {
-    case 'popularity':
+    case '0': // popularity
       data.sort((a, b) => {
         return a.likes - b.likes;
       });
       data.reverse();
       break;
-    case 'date':
+    case '1': // date
       data.sort((a, b) => {
         return a.date.localeCompare(b.date);
       });
       data.reverse();
       break;
-    case 'title':
+    case '2': // title
       data.sort((a, b) => {
         return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
       });
@@ -154,15 +152,7 @@ function trapFocus(modal) {
       }
     }
   });
-  // document.addEventListener(
-  //   'keydown',
-  //   (evt) => {
-  //     if (evt.code === 'Tab') {
   firstFocusableElement.focus();
-  //     }
-  //   },
-  //   { once: true }
-  // );
 }
 
 //  Init
@@ -176,18 +166,18 @@ async function init() {
   displayInfoBar(photographer.photographer);
 
   // Sort media elements
-  // const sortingMenu = document.querySelector('select');
+  const sortingMenu = document.querySelector('#combo1');
   // sortMedia(photographer.media, sortingMenu.value);
   sortMedia(photographer.media);
   // Listen for clicks once media loaded and sorted
   listenForClickOnMedia();
   listenForLikes();
 
-  // sortingMenu.addEventListener('change', () => {
-  //   sortMedia(photographer.media, sortingMenu.value);
-  //   // Listen again if sorting value changes to update displayedMedia array order
-  //   listenForClickOnMedia();
-  // });
+  sortingMenu.addEventListener('change', () => {
+    sortMedia(photographer.media, sortingMenu.dataset.value);
+    // Listen again if sorting value changes to update displayedMedia array order
+    listenForClickOnMedia();
+  });
 
   // Play video on hover & focus
   const videos = document.querySelectorAll('video');
