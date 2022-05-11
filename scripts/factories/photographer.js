@@ -136,9 +136,9 @@ function mediaFactory(data) {
         // price,
       } = item;
 
-      const mediaPath = `assets/photos/${
-        photographerName.toLowerCase().split(' ')[0]
-      }/${item.image ? image : video}`;
+      const mediaPath = `assets/photos/${photographerName.split(' ')[0]}/${
+        item.image ? image : video
+      }`;
 
       // Create HTML elements
       const mediaCard = document.createElement('article');
