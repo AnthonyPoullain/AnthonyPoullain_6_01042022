@@ -73,9 +73,10 @@
 #contact_modal {
   display: none;
   position: fixed;
-  top: -10%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%) scale(80%);
+  height: fit-content;
+  transform: translate(-50%, -50%) scale(80%);
   z-index: 20;
 }
 
@@ -84,7 +85,7 @@
   border-radius: 5px;
   background-color: var(--primary-color-light);
   /* width: 50%; */
-  width: 100vw;
+  width: 80vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -110,6 +111,10 @@
   font-weight: normal;
   text-align: left;
   margin-top: -20px;
+}
+
+#contact-form .contact_button {
+  font-size: calc(18px * 1.2);
 }
 
 form {
@@ -289,6 +294,10 @@ textarea {
   display: none;
 }
 
+.lightbox img:focus-visible {
+  border: none;
+}
+
 .lightbox > * {
   transform: translateY(-2%);
 }
@@ -448,7 +457,6 @@ textarea {
 .combo-option[aria-selected='true'] {
   padding-right: 30px;
   position: relative;
-  /* background-color: var(--primary-color-light); */
 }
 
 /* up arrow */

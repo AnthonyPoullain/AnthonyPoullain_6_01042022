@@ -1,6 +1,5 @@
 /* global id */
 /* global getPhotographer */
-/* global trapFocus */
 
 // Keyboard shortcuts
 document.addEventListener('keydown', function (event) {
@@ -11,11 +10,39 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
+//  Trap focus
+function trapFocus(modal) {
+  const focusableElements =
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+  const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
+  const focusableContent = modal.querySelectorAll(focusableElements);
+  const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
+  document.addEventListener('keydown', function (e) {
+    const isTabPressed = e.code === 'Tab';
+    if (!isTabPressed) return;
+    if (e.shiftKey) {
+      // if shift key pressed for shift + tab combination
+      if (document.activeElement === firstFocusableElement) {
+        lastFocusableElement.focus(); // add focus for the last focusable element
+        e.preventDefault();
+      }
+    } else {
+      // if tab key is pressed
+      if (document.activeElement === lastFocusableElement) {
+        // if focused has reached to last focusable element then focus first focusable element after pressing tab
+        firstFocusableElement.focus(); // add focus for the first focusable element
+        e.preventDefault();
+      }
+    }
+  });
+  firstFocusableElement.focus();
+}
+
 // Modal functionalities
 function displayModal() {
   const modal = document.getElementById('contact_modal');
   modal.style.display = 'block';
-  displayName();
+  displayTitle();
   trapFocus(modal);
   const close = modal.querySelector('#close-modal');
   close.addEventListener('keydown', (evt) => {
@@ -29,7 +56,7 @@ function closeModal() {
   modal.style.display = 'none';
 }
 
-async function displayName() {
+async function displayTitle() {
   const title = document.querySelector('.modal h2');
   const photographer = await getPhotographer(id);
   title.innerHTML = `Contactez-moi</br>${photographer.photographer.name}`;

@@ -32,6 +32,8 @@ async function getPhotographer() {
   );
   // Add photographerName to media data
   media.forEach((item) => (item.photographerName = photographer.name));
+  // Add userHasLiked to media data for like functionality
+  media.forEach((item) => (item.userHasLiked = false));
   return { photographer: photographer, media: [...media] };
 }
 
@@ -58,7 +60,7 @@ function displayMedia(photographer) {
     .querySelector('#main')
     .insertAdjacentElement('beforeend', mediaElement);
   displayedMedia = [...mediaElement.children];
-  // // Put HTML media element to its corresponding photographer.media object for ease of access
+  // Put HTML media element to its corresponding photographer.media object for ease of access
   photographer.forEach((el, i) => (el.html = displayedMedia[i]));
 }
 
@@ -71,29 +73,30 @@ function displayInfoBar(photographer) {
 //  Sort function
 function sortMedia(data, sortingMethod) {
   switch (sortingMethod) {
-    case '0': // popularity
+    case '0': // by popularity
       data.sort((a, b) => {
         return a.likes - b.likes;
       });
       data.reverse();
       break;
-    case '1': // date
+    case '1': // by date
       data.sort((a, b) => {
         return a.date.localeCompare(b.date);
       });
       data.reverse();
       break;
-    case '2': // title
+    case '2': // by title
       data.sort((a, b) => {
         return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
       });
       break;
   }
-  if (!data) console.error('No media to sort');
+  // display new order
   const mediaSection = document.querySelector('.media-section');
-  displayedMedia = data.map((item) => item.html);
   mediaSection.innerHTML = '';
   data.forEach((el) => mediaSection.appendChild(el.html));
+  // update displayedMedia
+  displayedMedia = data.map((item) => item.html);
 }
 
 //  Listen functions
@@ -102,57 +105,38 @@ function listenForClickOnMedia() {
     ['click', 'keydown'].forEach((evt) => {
       item.addEventListener(evt, (evt) => {
         if (evt.type === 'keydown' && evt.code !== 'Enter') return;
+        // reset index in case sorting modified it
+        index = displayedMedia.indexOf(item.parentNode);
         openLightbox(index);
       });
     });
   });
 }
 
-function listenForLikes() {
+function listenForLikes(photographer) {
   const hearts = document.querySelectorAll('.media-card__heart-btn');
-  const likes = document.querySelectorAll('.media-card__likes');
   const totalLikes = document.querySelector('.info-bar__likes');
   hearts.forEach((heart, index) => {
+    const likes = heart.previousSibling;
     heart.addEventListener('click', () => {
-      if (heart.dataset.liked === 'false') {
-        parseInt(likes[index].textContent++);
-        parseInt(totalLikes.textContent++);
-        heart.dataset.liked = 'true';
-        return;
+      // reset index in case sorting modified it
+      index = displayedMedia.indexOf(heart.parentNode.parentNode);
+      // modify data
+      if (!photographer.media[index].userHasLiked) {
+        photographer.media[index].userHasLiked = true;
+        photographer.media[index].likes++;
+        photographer.photographer.totalLikes++;
+      } else {
+        // if already liked, unlike
+        photographer.media[index].userHasLiked = false;
+        photographer.media[index].likes--;
+        photographer.photographer.totalLikes--;
       }
-      parseInt(likes[index].textContent--);
-      parseInt(totalLikes.textContent--);
-      heart.dataset.liked = 'false';
+      // refresh DOM values with new DATA
+      likes.innerHTML = photographer.media[index].likes;
+      totalLikes.innerHTML = photographer.photographer.totalLikes;
     });
   });
-}
-
-//  Trap focus
-function trapFocus(modal) {
-  const focusableElements =
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-  const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
-  const focusableContent = modal.querySelectorAll(focusableElements);
-  const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-  document.addEventListener('keydown', function (e) {
-    const isTabPressed = e.code === 'Tab';
-    if (!isTabPressed) return;
-    if (e.shiftKey) {
-      // if shift key pressed for shift + tab combination
-      if (document.activeElement === firstFocusableElement) {
-        lastFocusableElement.focus(); // add focus for the last focusable element
-        e.preventDefault();
-      }
-    } else {
-      // if tab key is pressed
-      if (document.activeElement === lastFocusableElement) {
-        // if focused has reached to last focusable element then focus first focusable element after pressing tab
-        firstFocusableElement.focus(); // add focus for the first focusable element
-        e.preventDefault();
-      }
-    }
-  });
-  firstFocusableElement.focus();
 }
 
 //  Init
@@ -167,16 +151,14 @@ async function init() {
 
   // Sort media elements
   const sortingMenu = document.querySelector('#combo1');
-  // sortMedia(photographer.media, sortingMenu.value);
-  sortMedia(photographer.media);
+  sortMedia(photographer.media, sortingMenu.dataset.value);
+
   // Listen for clicks once media loaded and sorted
   listenForClickOnMedia();
-  listenForLikes();
+  listenForLikes(photographer);
 
   sortingMenu.addEventListener('change', () => {
     sortMedia(photographer.media, sortingMenu.dataset.value);
-    // Listen again if sorting value changes to update displayedMedia array order
-    listenForClickOnMedia();
   });
 
   // Play video on hover & focus
