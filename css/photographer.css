@@ -355,14 +355,14 @@ textarea {
 }
 
 /* down arrow */
-.combo::after {
+.combo-input::after {
   position: absolute;
   content: '\f107';
   font-family: 'Font Awesome 5 Free';
   font-size: 18px;
   font-weight: 900;
-  color: #fff;
-  top: 28px;
+  color: inherit;
+  top: 27px;
   right: 10px;
   pointer-events: none;
 }
@@ -375,7 +375,7 @@ textarea {
   font-family: inherit;
   font-size: 18px;
   font-weight: bold;
-  color: white;
+  color: #fff;
   padding: 20px;
   height: 70px;
   border: none;
@@ -389,8 +389,9 @@ textarea {
 }
 
 .combo-input:hover,
-.combo-input:focus {
+.combo-input:focus-visible {
   background-color: var(--primary-color-light);
+  color: black;
   border: none;
   outline: none;
 }
@@ -409,6 +410,7 @@ textarea {
   z-index: 100;
   font-size: 18px;
   font-weight: bold;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
 .open .combo-menu {
@@ -435,10 +437,12 @@ textarea {
 
 .combo-option:hover {
   background-color: var(--primary-color-light);
+  color: black;
 }
 
 .combo-option.option-current {
   background-color: var(--primary-color-light);
+  color: black;
 }
 
 .combo-option[aria-selected='true'] {
@@ -454,7 +458,7 @@ textarea {
   font-family: 'Font Awesome 5 Free';
   font-size: 18px;
   font-weight: 900;
-  color: #fff;
+  color: inherit;
   top: 22px;
   right: 10px;
   pointer-events: none;
