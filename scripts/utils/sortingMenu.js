@@ -297,8 +297,6 @@ Select.prototype.onComboType = function (letter) {
 };
 
 Select.prototype.onOptionChange = function (index) {
-  // fuckup here somewhere !!!!
-  // console.log('onOptionChange(index)');
   // update state
   this.activeIndex = index;
 
@@ -316,7 +314,6 @@ Select.prototype.onOptionChange = function (index) {
 };
 
 Select.prototype.onOptionClick = function (index) {
-  // console.log('onOptionClick(index)');
   this.onOptionChange(index);
   this.selectOption(index);
   this.updateMenuState(false);
@@ -329,7 +326,6 @@ Select.prototype.onOptionMouseDown = function () {
 };
 
 Select.prototype.selectOption = function (index) {
-  // console.log('selectOption(index)');
   // update state
   this.activeIndex = index;
 
@@ -338,7 +334,8 @@ Select.prototype.selectOption = function (index) {
   this.comboEl.innerHTML = selected;
 
   // update data value
-  this.comboEl.dataset.value = index;
+  // this.comboEl.dataset.value = index;
+  this.comboEl.dataset.value = this.listboxEl.children[index].id.split('-')[1];
 
   // Manually fire change event otherwise addEventListener cant pick it up
   const e = new Event('change');
@@ -351,7 +348,6 @@ Select.prototype.selectOption = function (index) {
   });
 
   options[index].setAttribute('aria-selected', 'true');
-  // console.log(`Updated index: ${options[index].id}`);
 
   // move selected to the top
   options[index].parentNode.prepend(options[index]);
