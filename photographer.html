@@ -42,11 +42,11 @@
             aria-labelledby="combo1-label"
             id="combo1"
             class="combo-input"
-            role="combobox"
+            role="button"
             data-value="0"
             tabindex="0"
           ></div>
-          <div
+          <ul
             class="combo-menu"
             role="listbox"
             id="listbox1"
@@ -54,8 +54,8 @@
             tabindex="-1"
           >
             <!-- options are inserted here -->
-            <!-- e.g. <div role="option" id="op1">option text</div>  -->
-          </div>
+            <!-- e.g. <ul role="option" id="op1">option text</div>  -->
+          </ul>
         </div>
       </section>
     </main>
@@ -95,7 +95,7 @@
     >
       <div class="lightbox__left-controls">
         <img
-          role="button"
+          role="link"
           tabindex="0"
           id="left-arrow"
           class="lightbox__arrow"
@@ -112,11 +112,11 @@
           tabindex="0"
           class="lightbox__close"
           src="assets/icons/close-red.svg"
-          aria-label="Close dialog"
+          alt="Close dialog"
           onclick="closeLightbox()"
         />
         <img
-          role="button"
+          role="link"
           tabindex="0"
           id="right-arrow"
           class="lightbox__arrow"

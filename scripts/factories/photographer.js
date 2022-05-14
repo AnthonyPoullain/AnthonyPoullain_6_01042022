@@ -180,7 +180,6 @@ function mediaFactory(data) {
       );
       media.setAttribute('tabindex', '0');
       mediaHeartBtn.setAttribute('aria-label', 'likes');
-      // mediaHeartBtn.setAttribute('data-liked', 'false');
 
       // Append html children elements to main card element
       mediaSection.appendChild(mediaCard);

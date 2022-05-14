@@ -149,7 +149,7 @@ function isElementInView(element) {
 const Select = function (el, options = []) {
   // element refs
   this.el = el;
-  this.comboEl = el.querySelector('[role=combobox]');
+  this.comboEl = el.querySelector('[role=button]');
   this.listboxEl = el.querySelector('[role=listbox]');
 
   // data
@@ -185,7 +185,7 @@ Select.prototype.init = function () {
 };
 
 Select.prototype.createOption = function (optionText, index) {
-  const optionEl = document.createElement('div');
+  const optionEl = document.createElement('li');
   optionEl.setAttribute('role', 'option');
   optionEl.id = `${this.idBase}-${index}`;
   optionEl.className =
@@ -300,17 +300,16 @@ Select.prototype.onOptionChange = function (index) {
   // update state
   this.activeIndex = index;
 
-  // update aria-activedescendant
-  // this.comboEl.setAttribute('aria-activedescendant', `${this.idBase}-${index}`);
-  const activeDescendant = this.listboxEl.children[0].id;
-  this.comboEl.setAttribute('aria-activedescendant', activeDescendant);
-
   // update active option styles
   const options = this.el.querySelectorAll('[role=option]');
   [...options].forEach((optionEl) => {
     optionEl.classList.remove('option-current');
   });
   options[index].classList.add('option-current');
+
+  // update aria-activedescendant
+  const activeDescendant = this.listboxEl.querySelector('.option-current').id;
+  this.comboEl.setAttribute('aria-activedescendant', activeDescendant);
 };
 
 Select.prototype.onOptionClick = function (index) {

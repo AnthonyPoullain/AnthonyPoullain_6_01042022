@@ -91,11 +91,11 @@ function sortMedia(data, sortingMethod) {
       });
       break;
   }
-  // display new order
+  // Display new order
   const mediaSection = document.querySelector('.media-section');
   mediaSection.innerHTML = '';
   data.forEach((el) => mediaSection.appendChild(el.html));
-  // update displayedMedia
+  // Update displayedMedia
   displayedMedia = data.map((item) => item.html);
 }
 
@@ -119,20 +119,20 @@ function listenForLikes(photographer) {
   hearts.forEach((heart, index) => {
     const likes = heart.previousSibling;
     heart.addEventListener('click', () => {
-      // reset index in case sorting modified it
+      // Reset index in case sorting modified it
       index = displayedMedia.indexOf(heart.parentNode.parentNode);
-      // modify data
+      // Modify data
       if (!photographer.media[index].userHasLiked) {
         photographer.media[index].userHasLiked = true;
         photographer.media[index].likes++;
         photographer.photographer.totalLikes++;
       } else {
-        // if already liked, unlike
+        // If already liked, unlike
         photographer.media[index].userHasLiked = false;
         photographer.media[index].likes--;
         photographer.photographer.totalLikes--;
       }
-      // refresh DOM values with new DATA
+      // Refresh DOM values with new DATA
       likes.innerHTML = photographer.media[index].likes;
       totalLikes.innerHTML = photographer.photographer.totalLikes;
     });
@@ -152,14 +152,13 @@ async function init() {
   // Sort media elements
   const sortingMenu = document.querySelector('#combo1');
   sortMedia(photographer.media, sortingMenu.dataset.value);
-
-  // Listen for clicks once media loaded and sorted
-  listenForClickOnMedia();
-  listenForLikes(photographer);
-
   sortingMenu.addEventListener('change', () => {
     sortMedia(photographer.media, sortingMenu.dataset.value);
   });
+
+  // Listen for clicks once media is loaded and sorted
+  listenForClickOnMedia();
+  listenForLikes(photographer);
 
   // Play video on hover & focus
   const videos = document.querySelectorAll('video');
