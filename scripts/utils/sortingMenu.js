@@ -391,7 +391,6 @@ window.addEventListener('load', function () {
   const selectEls = document.querySelectorAll('.js-select');
 
   selectEls.forEach((el) => {
-    // eslint-disable-next-line no-new
     new Select(el, options);
   });
 });

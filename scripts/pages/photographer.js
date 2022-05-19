@@ -113,30 +113,41 @@ function listenForClickOnMedia() {
   });
 }
 
+// Likes
 function listenForLikes(photographer) {
   const hearts = document.querySelectorAll('.media-card__heart-btn');
-  const totalLikes = document.querySelector('.info-bar__likes');
   hearts.forEach((heart, index) => {
-    const likes = heart.previousSibling;
     heart.addEventListener('click', () => {
       // Reset index in case sorting modified it
       index = displayedMedia.indexOf(heart.parentNode.parentNode);
-      // Modify data
-      if (!photographer.media[index].userHasLiked) {
-        photographer.media[index].userHasLiked = true;
-        photographer.media[index].likes++;
-        photographer.photographer.totalLikes++;
-      } else {
-        // If already liked, unlike
-        photographer.media[index].userHasLiked = false;
-        photographer.media[index].likes--;
-        photographer.photographer.totalLikes--;
-      }
-      // Refresh DOM values with new DATA
-      likes.innerHTML = photographer.media[index].likes;
-      totalLikes.innerHTML = photographer.photographer.totalLikes;
+      toggleLike(photographer.media[index], index);
+      updateTotalLikes(photographer);
     });
   });
+}
+
+function toggleLike(media, index) {
+  const likesEl = document.querySelectorAll('.media-card__likes')[index];
+  // Update data
+  if (!media.userHasLiked) {
+    media.userHasLiked = true;
+    media.likes += 1;
+  } else {
+    media.userHasLiked = false;
+    media.likes -= 1;
+  }
+  // Update DOM values with new DATA
+  likesEl.innerHTML = media.likes;
+}
+
+function updateTotalLikes(photographer) {
+  // Update data
+  photographer.photographer.totalLikes = [...photographer.media]
+    .map((media) => media.likes)
+    .reduce((prev, current) => prev + current, 0);
+  // Update DOM values with new DATA
+  document.querySelector('.info-bar__likes').innerText =
+    photographer.photographer.totalLikes;
 }
 
 //  Init
