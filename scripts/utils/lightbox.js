@@ -62,24 +62,10 @@ function createZoomedMediaEl(mediaElement) {
 
 function nextMedia() {
   if (currentMediaIndex === displayedMedia.length - 1) return;
-  if (leftArrow.style.opacity === '0') {
-    leftArrow.style.opacity = '1';
-  }
-  if (currentMediaIndex >= displayedMedia.length - 2) {
-    // Hide arrow if no more media
-    rightArrow.style.opacity = '0';
-  }
   openLightbox(currentMediaIndex + 1);
 }
 
 function previousMedia() {
   if (!currentMediaIndex) return;
-  if (rightArrow.style.opacity === '0') {
-    rightArrow.style.opacity = '1';
-  }
-  if (currentMediaIndex <= 1) {
-    // Hide arrow if no more media
-    leftArrow.style.opacity = '0';
-  }
   openLightbox(currentMediaIndex - 1);
 }
